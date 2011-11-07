@@ -1,0 +1,1 @@
+# Clipperz browser extensions project
