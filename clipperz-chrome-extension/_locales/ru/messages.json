@@ -1,0 +1,86 @@
+{
+    "extension_name": {
+        "message": "Менеджер паролей Clipperz",
+        "description": "The name of this extension"
+    },
+    "extension_description": {
+        "message": "Менеджер паролей Clipperz, расширение для Google Chrome.",
+        "description": "Description of this extension"
+    },
+    "extension_browser_action_title": {
+        "message": "Clipperz - держи все при себе!",
+        "description": "Title of this extension button in the Chrome toolbar"
+    },
+    "options_page_title": {
+        "message": "Опции расширения Clipperz",
+        "description": "Title of Options page of this extension"
+    },
+    "options_page_save_credentials_label": {
+        "message": "Сохранять имя пользователя и пароль на данном компьютере",
+        "description": "Label on options page 'Save credentials on this computer'"
+    },
+    "options_page_username": {
+        "message": "Имя пользователя",
+        "description": "Label on options page 'Username'"
+    },
+    "options_page_passphrase": {
+        "message": "Пароль",
+        "description": "Label on options page 'Passphrase'"
+    },
+    "options_page_save": {
+        "message": "Сохранить",
+        "description": "Label on options page 'Save'"
+    },
+    "popup_page_header_slogan": {
+        "message": "держи при себе!",
+        "description": "The slogan in the header of the popup page"
+    },
+    "popup_page_header_logout_button_title": {
+        "message": "Выход",
+        "description": "The title of the Logout button in the header of the popup page"
+    },
+    "popup_page_body_default_text": {
+        "message": "Загрузка...",
+        "description": "Default text ofthe popup page body"
+    },
+    "popup_page_login_progress_error_message_title": {
+        "message": "Ошибка",
+        "description": "The title of the error message at the login progress block"
+    },
+    "popup_page_login_progress_error_message_button_text": {
+        "message": "Закрыть",
+        "description": "The text of the Close button at the login progress block"
+    },
+    "popup_page_login_progress_cancel_button_text": {
+        "message": "Отменить",
+        "description": "The text of the Cancel button at the login progress block"
+    },
+    "popup_page_login_progress_error_message": {
+        "message": "Попытка авторизации не удалась",
+        "description": "The error message text at the login progress block"
+    },
+    "popup_page_login_progress_header_title": {
+        "message": "Выполняется авторизация",
+        "description": "The title of the login progress block"
+    },
+    "popup_page_login_form_login_button_text": {
+        "message": "Авторизоваться",
+        "description": "The text of the Login button at the login form"
+    },
+    "popup_page_login_form_passphrase_label": {
+        "message": "Пароль",
+        "description": "The label 'Passphrase / OTP' at the login form"
+    },
+    "popup_page_login_form_username_label": {
+        "message": "Имя пользователя",
+        "description": "The label 'Username' at the login form"
+    },
+    "popup_page_login_form_title": {
+        "message": "Авторизация",
+        "description": "The title of the login form"
+    },
+    "popup_page_login_controller_error_message": {
+        "message": "Попытка авторизации не удалась",
+        "description": "The error message in the login controller"
+    }
+}

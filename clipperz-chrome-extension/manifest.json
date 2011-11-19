@@ -1,0 +1,20 @@
+{
+	"name": "__MSG_extension_name__",
+	"version": "1.0",
+	"description": "__MSG_extension_description__",
+	"icons": {
+		"16": "images/icon16.png",
+		"48": "images/icon48.png",
+		"128": "images/icon128.png"
+	},
+	"default_locale": "en",
+	"browser_action": {
+		"default_icon": "images/icon.png",
+		"default_title": "__MSG_extension_browser_action_title__",
+		"popup": "html/popup.html"
+	},
+	"background_page": "html/background.html",
+	"homepage_url": "https://www.clipperz.com",
+	"options_page": "html/options.html",
+	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*"]
+}

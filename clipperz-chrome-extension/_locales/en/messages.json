@@ -1,0 +1,86 @@
+{
+    "extension_name": {
+        "message": "Clipperz password manager",
+        "description": "The name of this extension"
+    },
+    "extension_description": {
+        "message": "Clipperz password manager extension for Google Chrome.",
+        "description": "Description of this extension"
+    },
+    "extension_browser_action_title": {
+        "message": "Clipperz - keep it to yourself!",
+        "description": "Title of this extension button in the Chrome toolbar"
+    },
+    "options_page_title": {
+        "message": "Clipperz extension options",
+        "description": "Title of the Options page of this extension"
+    },
+    "options_page_save_credentials_label": {
+        "message": "Save credentials on this computer",
+        "description": "The label on the options page 'Save credentials on this computer'"
+    },
+    "options_page_username": {
+        "message": "Username",
+        "description": "The label on the options page 'Username'"
+    },
+    "options_page_passphrase": {
+        "message": "Passphrase",
+        "description": "The label on the options page 'Passphrase'"
+    },
+    "options_page_save": {
+        "message": "Save",
+        "description": "The label on the options page 'Save'"
+    },
+    "popup_page_header_slogan": {
+        "message": "keep it to yourself!",
+        "description": "The slogan in the header of the popup page"
+    },
+    "popup_page_header_logout_button_title": {
+        "message": "Logout",
+        "description": "The title of the Logout button in the header of the popup page"
+    },
+    "popup_page_body_default_text": {
+        "message": "Loading...",
+        "description": "Default text ofthe popup page body"
+    },
+    "popup_page_login_progress_error_message_title": {
+        "message": "Error",
+        "description": "The title of the error message at the login progress block"
+    },
+    "popup_page_login_progress_error_message_button_text": {
+        "message": "Close",
+        "description": "The text of the Close button at the login progress block"
+    },
+    "popup_page_login_progress_cancel_button_text": {
+        "message": "Cancel",
+        "description": "The text of the Cancel button at the login progress block"
+    },
+    "popup_page_login_progress_error_message": {
+        "message": "Login failed",
+        "description": "The error message text at the login progress block"
+    },
+    "popup_page_login_progress_header_title": {
+        "message": "Login progress",
+        "description": "The title of the login progress block"
+    },
+    "popup_page_login_form_login_button_text": {
+        "message": "Login",
+        "description": "The text of the Login button at the login form"
+    },
+    "popup_page_login_form_passphrase_label": {
+        "message": "Passphrase / OTP",
+        "description": "The label 'Passphrase / OTP' at the login form"
+    },
+    "popup_page_login_form_username_label": {
+        "message": "Username",
+        "description": "The label 'Username' at the login form"
+    },
+    "popup_page_login_form_title": {
+        "message": "Login",
+        "description": "The title of the login form"
+    },
+    "popup_page_login_controller_error_message": {
+        "message": "Login failed",
+        "description": "The error message in the login controller"
+    }
+}

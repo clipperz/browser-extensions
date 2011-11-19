@@ -1,0 +1,131 @@
+<head>
+    <title>Clipperz extension popup page</title>
+    <link rel="stylesheet" type="text/css" href="/css/clipperz/clipperz-chrome-ext.css" />
+    
+    <script src="/js/MochiKit/Base.js"></script>
+    <script src="/js/MochiKit/Iter.js"></script>
+    <script src="/js/MochiKit/Logging.js"></script>
+    <script src="/js/MochiKit/Format.js"></script>
+    <script src="/js/MochiKit/Async.js"></script>
+    <script src="/js/MochiKit/DOM.js"></script>
+    <script src="/js/MochiKit/Style.js"></script>
+    <script src="/js/MochiKit/LoggingPane.js"></script>
+    <script src="/js/MochiKit/Color.js"></script>
+    <script src="/js/MochiKit/Signal.js"></script>
+    <script src="/js/MochiKit/Position.js"></script>
+    <script src="/js/MochiKit/Selector.js"></script>
+    <script src="/js/MochiKit/Visual.js"></script>
+    
+    <script src="/js/Clipperz/YUI/Utils.js"></script>
+    <script src="/js/Clipperz/YUI/DomHelper.js"></script>
+    
+    <script src="/js/Clipperz/ByteArray.js"></script>
+    <script src="/js/Clipperz/Base.js"></script>
+    <script src="/js/Clipperz/Async.js"></script>
+    <script src="/js/Clipperz/CSVProcessor.js"></script>
+    <script src="/js/Clipperz/KeePassExportProcessor.js"></script>
+    <script src="/js/Clipperz/Date.js"></script>
+    <script src="/js/Clipperz/DOM.js"></script>
+    <script src="/js/Clipperz/Logging.js"></script>
+    <script src="/js/Clipperz/Signal.js"></script>
+    <script src="/js/Clipperz/Style.js"></script>
+    <script src="/js/Clipperz/Visual.js"></script>
+    <script src="/js/Clipperz/Set.js"></script>
+    <script src="/js/Clipperz/KeyValueObjectStore.js"></script>
+    
+    <script src="/js/Clipperz/Crypto/SHA.js"></script>
+    <script src="/js/Clipperz/Crypto/AES.js"></script>
+    <script src="/js/Clipperz/Crypto/PRNG.js"></script>
+    <script src="/js/Clipperz/Crypto/BigInt.js"></script>
+    <script src="/js/Clipperz/Crypto/Base.js"></script>
+    <script src="/js/Clipperz/Crypto/SRP.js"></script>
+    <script src="/js/Clipperz/Crypto/RSA.js"></script>
+    
+    <script src="/js/Clipperz/PM/Date.js"></script>
+    <script src="/js/Clipperz/PM/Toll.js"></script>
+    <script src="/js/Clipperz/PM/Proxy.js"></script>
+    
+    <script src="/js/Clipperz/PM/Proxy/Proxy.JSON.js"></script>
+    <script src="/js/Clipperz/PM/Proxy/Proxy.Offline.js"></script>
+    <script src="/js/Clipperz/PM/Proxy/Proxy.Offline.DataStore.js"></script>
+    
+    <script src="/js/Clipperz/PM/Connection.js"></script>
+    <script src="/js/Clipperz/PM/Crypto.js"></script>
+
+    <script src="/js/Clipperz/PM/DataModel/EncryptedRemoteObject.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/User.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/User.Header.Legacy.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/User.Header.RecordIndex.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/User.Header.Preferences.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/User.Header.OneTimePasswords.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/Record.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/Record.Version.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/Record.Version.Field.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/DirectLogin.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/DirectLoginInput.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/DirectLoginBinding.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/DirectLoginFormValue.js"></script>
+    <script src="/js/Clipperz/PM/DataModel/OneTimePassword.js"></script>
+    
+    <script src="/js/Clipperz/PM/UI/Canvas/Marks/exclamationMark.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Marks/questionMark.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Marks/info.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Features/store.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Features/protect.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Features/directLogin.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Features/share.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Star/normal.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/CoverActions/look.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/CoverActions/download.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Tips/open.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Tips/close.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/RegisterButton/normal.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/Logo/normal.js"></script>
+    <script src="/js/Clipperz/PM/UI/Canvas/GraphicFunctions.js"></script>
+    
+    <script src="/js/Clipperz/PM/UI/Common/Components/BaseComponent.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/Button.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/ComponentSlot.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/FaviconComponent.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/PasswordEntropyDisplay.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/ProgressBar.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/SimpleMessagePanel.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/MessagePanelWithProgressBar.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/TabPanelComponent.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/Tooltip.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Components/TranslatorWidget.js"></script>
+    
+    <script src="/js/Clipperz/PM/UI/Common/Controllers/DirectLoginRunner.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Controllers/ProgressBarController.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Controllers/TabPanelController.js"></script>
+    <script src="/js/Clipperz/PM/UI/Common/Controllers/WizardController.js"></script>
+    
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/Page.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/PageHeader.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/LoginPage.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/LoginForm.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/LoginProgress.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Components/AppPage.js"></script>
+
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Controllers/PopupController.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Controllers/LoginController.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Controllers/AppController.js"></script>
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/Controllers/CardsController.js"></script>
+    
+    <script src="/js/Clipperz/PM/UI/Extensions/Chrome/popup.js"></script>
+
+    <script>
+        Clipperz_IEisBroken = false;
+        Clipperz_normalizedNewLine = '\n';
+        Clipperz_dumpUrl = "/dump/";
+        
+        Clipperz.PM.Proxy.defaultProxy = new Clipperz.PM.Proxy.JSON({'url':'https://www.clipperz.com/beta/json', 'shouldPayTolls':true});
+    </script>
+</head>
+<body>
+    <div id="mainDiv">
+        <div id="loading">
+            <h2>loading ...</h2>
+        </div>
+    </div>
+</body>
