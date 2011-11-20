@@ -49,6 +49,7 @@ Clipperz.PM.RunTime = {};
 
 function run() {
 	var controllerParameters = {};
+    Clipperz.PM.Strings.Languages.initSetup();
     Clipperz.PM.RunTime.mainController = new Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController(controllerParameters);
 	Clipperz.PM.RunTime.mainController.run();
 }

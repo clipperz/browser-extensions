@@ -1,6 +1,12 @@
 <head>
     <title>Clipperz extension popup page</title>
     <link rel="stylesheet" type="text/css" href="/css/clipperz/clipperz-chrome-ext.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cr/tree.css">
+
+    <script src="/js/cr/cr.js"></script>
+    <script src="/js/cr/ui/ui.js"></script>
+    <script src="/js/cr/ui/tree.css.js"></script>
+    <script src="/js/cr/ui/tree.js"></script>
     
     <script src="/js/MochiKit/Base.js"></script>
     <script src="/js/MochiKit/Iter.js"></script>
@@ -40,6 +46,10 @@
     <script src="/js/Clipperz/Crypto/Base.js"></script>
     <script src="/js/Clipperz/Crypto/SRP.js"></script>
     <script src="/js/Clipperz/Crypto/RSA.js"></script>
+
+    <script src="/js/Clipperz/PM/Strings/Strings_defaults.js"></script>
+    <script src="/js/Clipperz/PM/Strings/Strings_en-US.js"></script>
+    <script src="/js/Clipperz/PM/Strings.js"></script>
     
     <script src="/js/Clipperz/PM/Date.js"></script>
     <script src="/js/Clipperz/PM/Toll.js"></script>
@@ -119,7 +129,7 @@
         Clipperz_normalizedNewLine = '\n';
         Clipperz_dumpUrl = "/dump/";
         
-        Clipperz.PM.Proxy.defaultProxy = new Clipperz.PM.Proxy.JSON({'url':'https://www.clipperz.com/beta/json', 'shouldPayTolls':true});
+        Clipperz.PM.Proxy.defaultProxy = new Clipperz.PM.Proxy.JSON({'url':'https://www.clipperz.com/gamma/json', 'shouldPayTolls':true});
     </script>
 </head>
 <body>

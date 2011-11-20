@@ -48,6 +48,7 @@ Clipperz.PM.RunTime = {};
 
 
 function run() {
+    Clipperz.PM.Strings.Languages.initSetup();
     document.title = chrome.i18n.getMessage("options_page_title");
     Clipperz.PM.RunTime.mainController = chrome.extension.getBackgroundPage().Clipperz.PM.RunTime.mainController;
 

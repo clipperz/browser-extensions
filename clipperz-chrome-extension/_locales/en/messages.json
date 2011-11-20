@@ -31,6 +31,10 @@
         "message": "Save",
         "description": "The label on the options page 'Save'"
     },
+    "options_page_confirmation": {
+        "message": "Options have been saved",
+        "description": "Text of the 'Options have been saved' confirmation on the options page"
+    },
     "popup_page_header_slogan": {
         "message": "keep it to yourself!",
         "description": "The slogan in the header of the popup page"

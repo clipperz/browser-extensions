@@ -51,6 +51,7 @@ function run() {
     Clipperz.PM.RunTime.mainController = chrome.extension.getBackgroundPage().Clipperz.PM.RunTime.mainController;
 
     var controllerParameters = {};
+    Clipperz.PM.Strings.Languages.initSetup();
     Clipperz.PM.RunTime.popupController = new Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupController(controllerParameters);
 	Clipperz.PM.RunTime.popupController.run();
 }

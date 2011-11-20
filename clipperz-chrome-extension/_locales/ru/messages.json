@@ -31,6 +31,10 @@
         "message": "Сохранить",
         "description": "Label on options page 'Save'"
     },
+    "options_page_confirmation": {
+        "message": "Опции сохранены",
+        "description": "Text of the 'Options have been saved' confirmation on the options page"
+    },
     "popup_page_header_slogan": {
         "message": "держи при себе!",
         "description": "The slogan in the header of the popup page"

@@ -107,7 +107,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.AppController.
 		
 		deferredResult = new Clipperz.Async.Deferred("AppController.run", {trace:false});
 
-		deferredResult.addMethod(this.cardsController(),        'run', {slot:this.appPage().slotNamed('cardTree'), user:user});
+		deferredResult.addMethod(this.cardsController(),        'run', {slot:this.appPage().slotNamed('cardTree'), tree:this.appPage().getElement('tree'), user:user});
 		deferredResult.addCallback(MochiKit.Signal.signal, Clipperz.Signal.NotificationCenter, 'CARDS_CONTROLLER_DID_RUN');
 		deferredResult.callback();
 	},

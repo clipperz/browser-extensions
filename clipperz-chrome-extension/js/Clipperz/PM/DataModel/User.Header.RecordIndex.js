@@ -219,7 +219,7 @@ Clipperz.Base.extend(Clipperz.PM.DataModel.User.Header.RecordIndex, Object, {
 
 						reference = recordsInvertedIndex[indexReference];
 						
-						if (typeof(someData['recordsStats'][reference]) != 'undefined') {
+						if (!!someData && !!someData['recordsStats'] && !!someData['recordsStats'][reference]) {
 							updateDate = someData['recordsStats'][reference]['updateDate'];
 						
 							record = new Clipperz.PM.DataModel.Record({
@@ -240,7 +240,7 @@ Clipperz.Base.extend(Clipperz.PM.DataModel.User.Header.RecordIndex, Object, {
 		
 							this._records[reference] = record;
 						} else {
-Clipperz.log("SKIPPING record " + reference + " as there are no stas associated - " + Clipperz.Base.serializeJSON(someData['records'][reference]));
+Clipperz.log("SKIPPING record " + reference + " as there are no stats associated - " + Clipperz.Base.serializeJSON(someData['records'][reference]));
 							//	# skip the record, as it seems it is not present in the DB
 							//	updateDate = Clipperz.PM.Date.formatDateWithUTCFormat(new Date());
 						}

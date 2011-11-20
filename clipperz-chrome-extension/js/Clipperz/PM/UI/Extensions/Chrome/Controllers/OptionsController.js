@@ -78,7 +78,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.OptionsControl
         if (anEvent.shouldSaveCredentials) {
             localStorage['username'] = anEvent.username;
             localStorage['passphrase'] = anEvent.passphrase;
-            chrome.extension.getBackgroundPage().Clipperz.PM.RunTime.mainController.run();
+            Clipperz.PM.RunTime.mainController.run();
         } else {
             delete localStorage['username'];
             delete localStorage['passphrase'];

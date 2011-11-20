@@ -27,8 +27,9 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
 Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController = function(args) {
 	this._args = args;
-    this._user = null;
-    this._logining = false;
+	this._user = null;
+	this._cards = null;
+    this._initializing = false;
 	
 	return this;
 }
@@ -42,13 +43,21 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
 	'args': function () {
 		return this._args;
 	},
+	
+	'user': function () {
+	    return this._user;
+	},
 
-    'user': function () {
-        return this._user;
+    'cards': function () {
+        return this._cards;
     },
 
-    'logining': function () {
-        return this._logining;
+    'setCards': function (cards) {
+        this._cards = cards;
+    },
+
+    'initializing': function () {
+        return this._initializing;
     },
     
     'popup': function () {
@@ -64,43 +73,70 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
 	'run': function() {
         var username = localStorage['username'];
         var passphrase = localStorage['passphrase'];
-        if (username && passphrase && !this._user) {
-            this._logining = true;
+        if (username && passphrase) {
+            this._user = null;
+            this._initializing = true;
             var getPopup = this.popup;
             var getPassphrase = MochiKit.Base.partial(MochiKit.Async.succeed, passphrase);
             var user = new Clipperz.PM.DataModel.User({'username':username, 'getPassphraseFunction':getPassphrase});
+            this._user = user;
             var deferredResult = new Clipperz.Async.Deferred("MainController.doLogin", {trace:false});
             deferredResult.addMethod(Clipperz.Crypto.PRNG.defaultRandomGenerator(), 'deferredEntropyCollection');
             deferredResult.addMethod(user, 'login');
-            deferredResult.addMethod(this, 'handleLoggedIn', {user: user});
+            deferredResult.addMethod(this, 'retriveCards');
+            var self = this;
             deferredResult.addCallback(function () {
                 var popup = getPopup();
                 if (popup) {
                     popup.MochiKit.Signal.signal(popup.Clipperz.PM.RunTime.popupController.loginController(), 'userLoggedIn', {user: user});
                 }
+                self._initializing = false;
             });
-            deferredResult.addErrback(function () {
-                this._logining = false;
+            deferredResult.addErrback(function (anError) {
                 var popup = getPopup();
                 if (popup) {
                     popup.MochiKit.Signal.signal(popup.Clipperz.PM.RunTime.popupController.headerComponent(), 'logout');
                 }
+                self._initializing = false;
             });
             deferredResult.callback();
         }
 	},
 
+    'retriveCards': function () {
+
+        var objectCollectResultsConfiguration = {
+            '_rowObject':           MochiKit.Async.succeed,
+            '_reference':           MochiKit.Base.methodcaller('reference'),
+            '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
+            'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
+            'Cards.title':          MochiKit.Base.methodcaller('label')
+        };
+
+        var deferredResult = new Clipperz.Async.Deferred("MainController.retriveCards", {trace:true});
+        deferredResult.addMethod(this._user, 'getRecords');
+        deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("MainController.retriveCards - collectResults", objectCollectResultsConfiguration, {trace:true}));
+        deferredResult.addCallback(Clipperz.Async.collectAll);
+        deferredResult.addCallback(MochiKit.Base.bind(function (someRows) {
+            this._cards = someRows;
+            return this._cards;
+        }, this));
+        deferredResult.callback();
+        
+        return deferredResult;
+    },
+
     //-------------------------------------------------------------------------
 
     'handleLoggedIn': function(anEvent) {
-        this._logining = false;
         this._user = anEvent['user'];
     },
 
 	//-----------------------------------------------------------------------------
 
 	'handleLogout': function(anEvent) {
-		this._user = null;
+	    this._user =  null;
+        this._cards = null;
 	},
 
 	//-----------------------------------------------------------------------------

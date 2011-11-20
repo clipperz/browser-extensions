@@ -106,10 +106,10 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
         
         MochiKit.Signal.connect(this.headerComponent(), 'logout', this.appController(), 'handleLogout');
 
-        var user = Clipperz.PM.RunTime.mainController.user();
-        if (user) {
+        if (Clipperz.PM.RunTime.mainController.cards()) {
+            var user = Clipperz.PM.RunTime.mainController.user();
             MochiKit.Signal.signal(this.loginController(), 'userLoggedIn', {user: user});
-        } else if (!Clipperz.PM.RunTime.mainController.logining()) {
+        } else if (!Clipperz.PM.RunTime.mainController.initializing()) {
             this.loginController().run({slot:this.pageComponent().slotNamed('body')});
         }
 	},

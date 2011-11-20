@@ -51,7 +51,9 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.AppPage, Clippe
 	//-------------------------------------------------------------------------
 
 	'renderSelf': function(/*aContainer, aPosition*/) {
-		this.append(this.element(), {tag:'div', id:this.getId('cardTree'), cls:'treeComponent cardTree'});
+		this.append(this.element(), {tag:'div', id:this.getId('cardTree'), cls:'treeComponent cardTree', children:[
+            {tag:'tree', id:this.getId('tree'), role:'tree'}		
+		]});
 	},
 
 	//-------------------------------------------------------------------------

@@ -67,7 +67,8 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm, Cl
                     {tag:'label', html:chrome.i18n.getMessage('options_page_passphrase'), 'for':this.getId('passphraseField')},
                     {tag:'input', id:this.getId('passphraseField'), type:'password', cls:'password'/*, value:'clipperz'*/},
                     
-                    {tag:'input', id:this.getId('submitButton'), type:'submit', value:chrome.i18n.getMessage('options_page_save'), cls:'submit'}
+                    {tag:'input', id:this.getId('submitButton'), type:'submit', value:chrome.i18n.getMessage('options_page_save'), cls:'submit'},
+                    {tag:'div', id:'confirmation', html:chrome.i18n.getMessage('options_page_confirmation')}
                 ]}
 			]},
 			{tag:'div', cls:'footer'}
@@ -115,6 +116,9 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm, Cl
         signalArguments.passphrase = passphrase;
 
         MochiKit.Signal.signal(this, 'saveOptions', signalArguments);
+        var el = this.element();
+        MochiKit.DOM.addElementClass(el, 'saved');
+        setTimeout(function(){MochiKit.DOM.removeElementClass(el, 'saved')}, 1000);
     },
     
     'onSaveCredentialsCheckboxClick': function(anEvent) {
