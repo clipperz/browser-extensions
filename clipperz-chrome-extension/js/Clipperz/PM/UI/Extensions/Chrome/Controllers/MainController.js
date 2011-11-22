@@ -110,16 +110,17 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
             '_reference':           MochiKit.Base.methodcaller('reference'),
             '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
             'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
-            'Cards.title':          MochiKit.Base.methodcaller('label')
+            'Cards.title':          MochiKit.Base.methodcaller('label'),
+            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences')
         };
 
-        var deferredResult = new Clipperz.Async.Deferred("MainController.retriveCards", {trace:true});
+        var deferredResult = new Clipperz.Async.Deferred("CardsController.retriveCards", {trace:false});
         deferredResult.addMethod(this._user, 'getRecords');
-        deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("MainController.retriveCards - collectResults", objectCollectResultsConfiguration, {trace:true}));
+        deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("CardsController.retriveCards - collectResults", objectCollectResultsConfiguration, {trace:false}));
         deferredResult.addCallback(Clipperz.Async.collectAll);
         deferredResult.addCallback(MochiKit.Base.bind(function (someRows) {
-            this._cards = someRows;
-            return this._cards;
+            Clipperz.PM.RunTime.mainController.setCards(someRows);
+            return someRows;
         }, this));
         deferredResult.callback();
         

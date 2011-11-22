@@ -66,6 +66,9 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm, Cl
 
                     {tag:'label', html:chrome.i18n.getMessage('options_page_passphrase'), 'for':this.getId('passphraseField')},
                     {tag:'input', id:this.getId('passphraseField'), type:'password', cls:'password'/*, value:'clipperz'*/},
+
+                    {tag:'label', html:chrome.i18n.getMessage('options_page_tree_separator'), 'for':this.getId('treeSeparatorField')},
+                    {tag:'input', id:this.getId('treeSeparatorField'), type:'text', cls:'treeSeparator'},
                     
                     {tag:'input', id:this.getId('submitButton'), type:'submit', value:chrome.i18n.getMessage('options_page_save'), cls:'submit'},
                     {tag:'div', id:'confirmation', html:chrome.i18n.getMessage('options_page_confirmation')}
@@ -85,6 +88,7 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm, Cl
 	},
 	
 	'initFields': function(args) {
+	        this.getElement('treeSeparatorField').value = args.treeSeparator;
             this.getElement('saveCredentialsCheckbox').checked = args.shouldSaveCredentials;
             var elUsernameField = this.getElement('usernameField');
             var elPassphraseField = this.getElement('passphraseField');
@@ -99,21 +103,14 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm, Cl
     //-----------------------------------------------------------------------------
 
     'saveOptionsEventHandler': function(anEvent) {
-        var shouldSaveCredentials;
-        var username;
-        var passphrase;
-
-        var signalArguments;
-
         anEvent.preventDefault();
 
-        shouldSaveCredentials = this.getElement('saveCredentialsCheckbox').checked;
-        username = this.getElement('usernameField').value;
-        passphrase = this.getElement('passphraseField').value;
-
-        signalArguments = {shouldSaveCredentials:shouldSaveCredentials};
-        signalArguments.username = username;
-        signalArguments.passphrase = passphrase;
+        var signalArguments = {
+            shouldSaveCredentials: this.getElement('saveCredentialsCheckbox').checked,
+            username: this.getElement('usernameField').value,
+            passphrase: this.getElement('passphraseField').value,
+            treeSeparator: this.getElement('treeSeparatorField').value
+        };
 
         MochiKit.Signal.signal(this, 'saveOptions', signalArguments);
         var el = this.element();

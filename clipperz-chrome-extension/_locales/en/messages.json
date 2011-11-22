@@ -27,6 +27,10 @@
         "message": "Passphrase",
         "description": "The label on the options page 'Passphrase'"
     },
+    "options_page_tree_separator": {
+        "message": "Nested Labels Separator",
+        "description": "The label on the options page 'Nested Labels Separator'"
+    },
     "options_page_save": {
         "message": "Save",
         "description": "The label on the options page 'Save'"

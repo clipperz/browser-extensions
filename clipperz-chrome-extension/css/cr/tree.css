@@ -103,6 +103,7 @@ tree:focus .tree-row[selected] {
   background-image: url("/images/folder_closed.png");
   background-position: 0 50%;
   background-repeat: no-repeat;
+  background-size: 16px 16px;
   white-space: pre;
 }
 

@@ -49,15 +49,16 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.OptionsControl
     //-----------------------------------------------------------------------------
 
     'run' : function(args) {
-        var optionsPage;
-        var optionsForm;
-
-        optionsForm = new Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm();
+        var optionsForm = new Clipperz.PM.UI.Extensions.Chrome.Components.OptionsForm();
 
         this.optionsPage().render();
         this.optionsPage().slotNamed('optionsForm').setContent(optionsForm);
         
-        var initialValues = {};
+        var treeSeparator = localStorage['treeSeparator'];
+        if (!treeSeparator) {
+            treeSeparator = "";
+        }
+        var initialValues = {treeSeparator: treeSeparator };
         var username = localStorage['username'];
         var passphrase = localStorage['passphrase'];
         if (username && passphrase) {
@@ -75,6 +76,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.OptionsControl
     //=============================================================================
     
     'handleSaveOptions' : function(aOptionsForm, anEvent) {
+        localStorage['treeSeparator'] = anEvent.treeSeparator;
         if (anEvent.shouldSaveCredentials) {
             localStorage['username'] = anEvent.username;
             localStorage['passphrase'] = anEvent.passphrase;

@@ -47,7 +47,25 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
         this._tree = args.tree;
         this._user = args.user;
         cr.ui.Tree.decorate(this._tree);
-        this.displayTreeItems();
+//        this.displayTreeItems();
+/*        var self = this;
+        setTimeout(function(){
+            self._displayTreeItems([
+                {'Cards.title': "zzz - xxx - ccc"},
+                {'Cards.title': "xxx - bbb - qqq"},
+                {'Cards.title': "zzz - xxx - aaa"},
+                {'Cards.title': "zzz - aaa - bbb"},
+                {'Cards.title': "ddd - xxx"},
+                {'Cards.title': "bbb"},
+            ]);
+        }, 3000);
+*/        
+
+        var self = this;
+        setTimeout(function(){
+            self.displayTreeItems();
+        }, 3000);
+        
     },
 
     //-----------------------------------------------------------------------------
@@ -84,7 +102,8 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
             '_reference':           MochiKit.Base.methodcaller('reference'),
             '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
             'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
-            'Cards.title':          MochiKit.Base.methodcaller('label')
+            'Cards.title':          MochiKit.Base.methodcaller('label'),
+            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences')
         };
 
         var deferredResult = new Clipperz.Async.Deferred("CardsController.retriveCards", {trace:true});
@@ -103,17 +122,67 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
     //-----------------------------------------------------------------------------
 
     '_displayTreeItems': function (someRows) {
-        var listener = function(e) {
-            alert(e.target.innerText);
+        
+        const separator = localStorage['treeSeparator'];
+        
+        var compare = function(a, b) {
+            return a['Cards.title'].localeCompare(b['Cards.title']);
+        }
+        
+        someRows.sort(compare);
+        
+        var findTreeItem = function(items, label) {
+            for (i in items) {
+                var item = items[i];
+                if (item.label == label) {
+                    return item;
+                }
+            }
+            return null;
         }
 
-        for(var r in someRows) {
+        for (var r in someRows) {
             var row = someRows[r];
-            var treeItem = new cr.ui.TreeItem();
-            treeItem.label = row['Cards.title'];
-            treeItem.labelElement.addEventListener('click', listener);
-            this._tree.add(treeItem);
+            var title = row['Cards.title'];
+            var nodeLabels;
+            if (separator && separator.length > 0) {
+                nodeLabels = title.split(separator);
+            } else {
+                nodeLabels = [title];
+            }
+            var current = this._tree;
+            var lastIndex = nodeLabels.length - 1;
+            for (var n in nodeLabels) {
+                var label = nodeLabels[n];
+                var item = findTreeItem(current.items, label);
+                if (item == null) {
+                    item = new cr.ui.TreeItem();
+                    item.label = label;
+                    var favicon = row['Cards.favicon'];
+                    if (n == lastIndex) {
+                        item.icon = favicon ? favicon : '/images/webpage.png';
+                        var directLogins = row['Cards.directLogins'];
+                        for (var d in directLogins) {
+                            var directLogin = directLogins[d];
+                            var directLoginItem = new cr.ui.TreeItem();
+                            directLoginItem.label = directLogin.label + " [direct login]"; //TODO
+                            var favicon = directLogin.favicon;
+                            directLoginItem.icon = favicon ? favicon : '/images/webpage.png';
+                            item.add(directLoginItem);
+                            MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin._rowObject));
+                        }
+                    }
+                    current.add(item);
+                }
+                current = item;
+            }
         }
+    },
+    
+    'handleDirectLoginClick': function (aDirectLogin, anEvent) {
+        anEvent.preventDefault();
+//      aDirectLogin.runDirectLogin();
+        Clipperz.PM.UI.Common.Controllers.DirectLoginRunner.openDirectLogin(aDirectLogin);
     },
 
 	//=============================================================================
