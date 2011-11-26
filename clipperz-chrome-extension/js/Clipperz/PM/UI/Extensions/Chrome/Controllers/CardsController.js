@@ -122,14 +122,12 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
     //-----------------------------------------------------------------------------
 
     '_displayTreeItems': function (someRows) {
-        
+
         const separator = localStorage['treeSeparator'];
         
-        var compare = function(a, b) {
+        someRows.sort(function(a, b) {
             return a['Cards.title'].localeCompare(b['Cards.title']);
-        }
-        
-        someRows.sort(compare);
+        });
         
         var findTreeItem = function(items, label) {
             for (i in items) {
@@ -165,11 +163,11 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                         for (var d in directLogins) {
                             var directLogin = directLogins[d];
                             var directLoginItem = new cr.ui.TreeItem();
-                            directLoginItem.label = directLogin.label + " [direct login]"; //TODO
-                            var favicon = directLogin.favicon;
+                            directLoginItem.label = directLogin['label'] + " [direct login]"; //TODO
+                            var favicon = directLogin['favicon'];
                             directLoginItem.icon = favicon ? favicon : '/images/webpage.png';
                             item.add(directLoginItem);
-                            MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin._rowObject));
+                            MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin['_rowObject']));
                         }
                     }
                     current.add(item);
