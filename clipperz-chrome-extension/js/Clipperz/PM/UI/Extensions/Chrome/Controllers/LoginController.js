@@ -56,113 +56,59 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.LoginControlle
 	//-----------------------------------------------------------------------------
 
 	'run': function(args) {
-		var	slot;
-		var	loginPage;
-		var	loginForm;
-
-		slot = args.slot;
-
-		loginForm =	new Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm({'autocomplete': this.args()['autocomplete']});
-
+		var slot = args.slot;
+		var loginForm =	new Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm({'autocomplete': this.args()['autocomplete']});
 		slot.setContent(this.loginPage());
 		this.loginPage().slotNamed('loginForm').setContent(loginForm);
 
-		MochiKit.Signal.connect(loginForm, 'doLogin', MochiKit.Base.method(this, 'doLogin', loginForm));
-		MochiKit.Signal.connect(Clipperz.Signal.NotificationCenter, 'doLogin', MochiKit.Base.method(this, 'doLogin', loginForm));
-	},
+        var loginProgress = new Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress();
+        var self = this;
+        var loginProgressListener = {
+            'loginProgressChanged': function(backgroundLoginProgress, event) {
+                if (event == 'start') {
+                    var deferred1 = new Clipperz.Async.Deferred("LoginController.showProgress", {trace:false});
+                    deferred1.addMethod(loginProgress, 'deferredShowModal', {deferredObject:deferred1, openFromElement:loginForm.submitButtonElement()});
+                    deferred1.addCallback(function () {
+                        MochiKit.Signal.connect(loginProgress, 'cancelEvent', backgroundLoginProgress, 'cancelLogin');
+                        MochiKit.Signal.signal(Clipperz.PM.UI.Common.Controllers.ProgressBarController.defaultController, 'updateProgress', backgroundLoginProgress.completedPercentage());
+                    });
+                    deferred1.callback();
+                    if (!backgroundLoginProgress.canBeCancelled()) {
+                        loginProgress.disableCancel();
+                    }
 
-	//-----------------------------------------------------------------------------
+                } else if (event == 'stop') {
+                    if (backgroundLoginProgress.errorOccurred()) {
+                        loginProgress.showErrorMessage(backgroundLoginProgress.lastError());
+                    } else {
+                        var deferred2 = new Clipperz.Async.Deferred("LoginController.hideProgress", {trace:false});
+                        deferred2.addMethod(loginProgress, 'deferredHideModalAndRemove', {closeToElement:loginForm.submitButtonElement()});
+                        deferred2.callback();
+                        MochiKit.Signal.signal(self, 'userLoggedIn');
+                    }
+                } else if (event == 'disableCancel') {
+                    loginProgress.disableCancel();
+                } else if (event == 'updateProgressHandler') {
+                    MochiKit.Signal.signal(Clipperz.PM.UI.Common.Controllers.ProgressBarController.defaultController, 'updateProgress', backgroundLoginProgress.completedPercentage());
+                } else if (event == 'cancelLogin') {
+                    var deferred3 = new Clipperz.Async.Deferred("LoginController.hideProgress", {trace:false});
+                    deferred3.addMethod(loginProgress, 'deferredHideModalAndRemove', {closeToElement:loginForm.submitButtonElement()});
+                    deferred3.callback();
+                }
+            }
+        };
 
-	'doLogin': function(aLoginForm, anEvent) {
-		var deferredResult;
-		var	parameters;
-//		var	shouldUseOTP;
-		var loginProgress;
-		var	user;
-		var getPassphraseDelegate;
+        var backgroundLoginController = Clipperz.PM.RunTime.mainController.loginController();
+        if (backgroundLoginController.inProgress()) {
+            backgroundLoginController.setProgressListener(loginProgressListener);
+        }
 
-		parameters = anEvent;
-//		shouldUseOTP = (typeof(parameters.passphrase) == 'undefined');
+        var doLogin = function(anEvent) {
+            Clipperz.PM.RunTime.mainController.login({username:anEvent.username, passphrase:anEvent.passphrase, progressListener:loginProgressListener});
+        };
 
-		getPassphraseDelegate = MochiKit.Base.partial(MochiKit.Async.succeed, parameters.passphrase);
-		user = new Clipperz.PM.DataModel.User({'username':parameters.username, 'getPassphraseFunction':MochiKit.Base.method(Clipperz.PM.RunTime.popupController, 'getPassphrase')});
-
-		loginProgress = new Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress();
-
-		deferredResult = new Clipperz.Async.Deferred("LoginController.doLogin", {trace:false});
-		deferredResult.addCallbackPass(MochiKit.Signal.signal, Clipperz.Signal.NotificationCenter, 'initProgress', {'steps':4});
-		deferredResult.addMethod(Clipperz.PM.RunTime.popupController, 'setPassphraseDelegate', getPassphraseDelegate);
-		deferredResult.addMethod(loginProgress, 'deferredShowModal', {deferredObject:deferredResult, openFromElement:aLoginForm.submitButtonElement()});
-		deferredResult.addMethod(Clipperz.Crypto.PRNG.defaultRandomGenerator(), 'deferredEntropyCollection');
-//		if (shouldUseOTP == false) {
-			deferredResult.addMethod(user, 'login');
-//		} else {
-//			deferredResult.addMethod(user, 'loginUsingOTP', parameters.username, parameters.otp);
-//		}
-		deferredResult.addCallback(function(aLoginProgress, res) {
-			aLoginProgress.disableCancel();
-			return res;
-		}, loginProgress);
-		deferredResult.addCallback(function () {
-			MochiKit.Signal.connect(Clipperz.Signal.NotificationCenter, 'CARDS_CONTROLLER_DID_RUN',	MochiKit.Base.method(loginProgress, 'deferredHideModalAndRemove', {closeToElement:MochiKit.DOM.currentDocument().body}));
-		});
-		deferredResult.addMethod(this, 'userLoggedIn', user, loginProgress, aLoginForm);
-		deferredResult.addErrback (MochiKit.Base.method(this, 'handleFailedLogin', loginProgress));
-
-		deferredResult.addErrback (MochiKit.Base.method(loginProgress, 'deferredHideModalAndRemove', {closeToElement:aLoginForm.submitButtonElement()}));
-		deferredResult.addErrbackPass (MochiKit.Base.method(aLoginForm, 'focusOnPassphraseField'));
-		deferredResult.addBoth(MochiKit.Base.method(Clipperz.PM.RunTime.popupController, 'removePassphraseDelegate', getPassphraseDelegate));
-		deferredResult.callback();
-
-		MochiKit.Signal.connect(loginProgress, 'cancelEvent', deferredResult, 'cancel');
-
-		return deferredResult;
-	},
-
-	//-----------------------------------------------------------------------------
-
-	'userLoggedIn': function(aUser) {
-//Clipperz.log(">>> LoginController.userLoggedIn");
-		MochiKit.Signal.signal(this, 'userLoggedIn', {user: aUser});
-//Clipperz.log("<<< LoginController.userLoggedIn");
-	},
-
-	//=========================================================================
-
-	'handleFailedLogin': function(aLoginProgress, anError) {
-		var result;
-
-//console.log("anError", anError);
-		if (anError instanceof MochiKit.Async.CancelledError) {
-			result = anError;
-		} else {
-			var deferredResult;
-			
-MochiKit.Logging.logError("## MainController - FAILED LOGIN: " + anError);
-			deferredResult = new MochiKit.Async.Deferred();
-
-			aLoginProgress.showErrorMessage(chrome.i18n.getMessage('popup_page_login_controller_error_message'));
-//			Clipperz.NotificationCenter.register(loginProgress, 'cancelEvent', deferredResult, 'callback');
-			MochiKit.Signal.connect(aLoginProgress, 'cancelEvent', deferredResult, 'callback');
-			deferredResult.addCallback(MochiKit.Async.fail, anError)
-			result = deferredResult;
-		}
-	
-		return result;
-	},
-
-	'handleGenericError': function(anError) {
-		var result;
-		
-		if (anError instanceof MochiKit.Async.CancelledError) {
-			result = anError;
-		} else {
-MochiKit.Logging.logError("## MainController - GENERIC ERROR" + "\n" + "==>> " + anError + " <<==\n" + anError.stack);
-//console.log(anError);
-			result = new MochiKit.Async.CancelledError(anError);
-		}
-	
-		return result;
+        MochiKit.Signal.connect(loginForm, 'doLogin', doLogin);
+        MochiKit.Signal.connect(Clipperz.Signal.NotificationCenter, 'doLogin', doLogin);
 	},
 
 	//-----------------------------------------------------------------------------

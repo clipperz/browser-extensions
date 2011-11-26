@@ -78,13 +78,18 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.OptionsControl
     'handleSaveOptions' : function(aOptionsForm, anEvent) {
         localStorage['treeSeparator'] = anEvent.treeSeparator;
         if (anEvent.shouldSaveCredentials) {
+            var oldUsername = localStorage['username'];
+            var oldPassphrase = localStorage['passphrase'];
             localStorage['username'] = anEvent.username;
             localStorage['passphrase'] = anEvent.passphrase;
-            Clipperz.PM.RunTime.mainController.run();
+            if (anEvent.username != oldUsername || anEvent.passphrase != oldPassphrase) {
+                Clipperz.PM.RunTime.mainController.run();
+            }
         } else {
             delete localStorage['username'];
             delete localStorage['passphrase'];
         }
+
     },
     
     //=============================================================================

@@ -27,15 +27,8 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Components');
 
 Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm = function(args) {
 	args = args || {};
-
 	this._autocomplete = args.autocomplete || 'off';
-
 	Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm.superclass.constructor.apply(this, arguments);
-
-	this._slots = {
-		'passphraseEntropy':	this.getId('passphraseEntropy')
-	};
-
 	return this;
 }
 
@@ -62,7 +55,6 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm, Clip
 				{tag:'div', id:this.getId('loginForm'), children:[
 					{tag:'div', children:[
 						{tag:'h4', html:chrome.i18n.getMessage('popup_page_login_form_title')},
-//						{tag:'form', cls:'loginForm', autocomplete:this.autocomplete(), children:[
 						{tag:'form', id:this.getId('form'), cls:'loginForm', children:[
 							{tag:'label', html:chrome.i18n.getMessage('popup_page_login_form_username_label'), 'for':this.getId('usernameField')},
 							{tag:'input', id:this.getId('usernameField'), type:'text', cls:'username'/*, value:'joe'*/},
@@ -70,20 +62,8 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm, Clip
 								{tag:'li', id:this.getId('passphraseOption'), children:[
 									{tag:'label', html:chrome.i18n.getMessage('popup_page_login_form_passphrase_label'), 'for':this.getId('passphraseField')},
 									{tag:'input', id:this.getId('passphraseField'), type:'password', cls:'password'/*, value:'clipperz'*/}
-								]}	//	,
-/*
-								{tag:'li', id:this.getId('otpOption'), children:[
-									{tag:'label', html:'one-time password', 'for':this.getId('otpField_1')},
-									{tag:'input', id:this.getId('otpField_1'), type:'text', cls:'otp', value:'abcd-efgh'},
-									{tag:'input', id:this.getId('otpField_2'), type:'text', cls:'otp', value:'abcd-efgh'},
-									{tag:'input', id:this.getId('otpField_3'), type:'text', cls:'otp', value:'abcd-efgh'},
-									{tag:'input', id:this.getId('otpField_4'), type:'text', cls:'otp', value:'abcd-efgh'}
 								]}
-*/
 							]},
-//							{tag:'input', id:this.getId('otpCheckbox'), type:'checkbox', cls:'checkbox'},
-//							{tag:'label', html:'use a one-time passphrase', 'for':this.getId('otpCheckbox'), cls:'checkbox'},
-
 							{tag:'input', id:this.getId('submitButton'), type:'submit', value:chrome.i18n.getMessage('popup_page_login_form_login_button_text'), cls:'submit'}
 						]}
 					]}
@@ -91,13 +71,10 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm, Clip
 			]},
 			{tag:'div', cls:'footer'}
 		]});
-
 		if (this.autocomplete() == 'off') {
 			MochiKit.DOM.updateNodeAttributes(this.getElement('form'), {autocomplete:'off'});
 		}
-
 		this.getElement('usernameField').focus();
-
 		MochiKit.Signal.connect(this.getElement('loginForm'), 'onsubmit', this, 'loginEventHandler');
 	},
 
@@ -108,40 +85,11 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginForm, Clip
 		this.getElement('passphraseField').select();
 	},
 
-	//-----------------------------------------------------------------------------
-/*
-	'showOTPFields': function() {
-		this.hideElement('passphraseOption');
-		this.showElement('otpOption');
-	},
-*/
-	//-------------------------------------------------------------------------
-	
 	'loginEventHandler': function(anEvent) {
-		var	username;
-		var passphrase;
-//		var shouldUseOTP;
-//		var otp;
-		var signalArguments;
-
 		anEvent.preventDefault();
-
-		username = this.getElement('usernameField').value;
-		passphrase = this.getElement('passphraseField').value;
-//		otp =	this.getElement('otpField_1').value +
-//				this.getElement('otpField_2').value +
-//				this.getElement('otpField_3').value +
-//				this.getElement('otpField_4').value;
-//		shouldUseOTP = this.getElement('otpCheckbox').checked;
-
-		signalArguments = {username:username};
-
-//		if (shouldUseOTP) {
-//			signalArguments.otp = otp;
-//		} else {
-			signalArguments.passphrase = passphrase;
-//		}
-
+		var username = this.getElement('usernameField').value;
+		var passphrase = this.getElement('passphraseField').value;
+		var signalArguments = {username:username, passphrase:passphrase};
 		MochiKit.Signal.signal(this, 'doLogin', signalArguments);
 	},
 

@@ -27,25 +27,17 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
 Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController = function(args) {
 	this._args = args;
-	this._user = null;
+    this._user = null;
 	this._cards = null;
-    this._initializing = false;
-	
+    this._cardRows = null;
+    this._loginController = new Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLoginController();
 	return this;
-}
+};
 
 MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController.prototype, {
 
 	'toString': function() {
 		return "Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController";
-	},
-
-	'args': function () {
-		return this._args;
-	},
-	
-	'user': function () {
-	    return this._user;
 	},
 
     'cards': function () {
@@ -56,16 +48,16 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
         this._cards = cards;
     },
 
-    'initializing': function () {
-        return this._initializing;
+    'setCardRows': function (cardRows) {
+        this._cardRows = cardRows;
     },
-    
-    'popup': function () {
-        var popups = chrome.extension.getViews({type: "popup"});
-        if (popups.length != 0) {
-          return popups[0];
-        }
-        return null;
+
+    'setUser': function (user) {
+        this._user = user;
+    },
+
+    'loginController': function () {
+        return this._loginController;
     },
 
 	//-----------------------------------------------------------------------------
@@ -74,71 +66,37 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
         var username = localStorage['username'];
         var passphrase = localStorage['passphrase'];
         if (username && passphrase) {
-            this._user = null;
-            this._initializing = true;
-            var getPopup = this.popup;
-            var getPassphrase = MochiKit.Base.partial(MochiKit.Async.succeed, passphrase);
-            var user = new Clipperz.PM.DataModel.User({'username':username, 'getPassphraseFunction':getPassphrase});
-            this._user = user;
-            var deferredResult = new Clipperz.Async.Deferred("MainController.doLogin", {trace:false});
-            deferredResult.addMethod(Clipperz.Crypto.PRNG.defaultRandomGenerator(), 'deferredEntropyCollection');
-            deferredResult.addMethod(user, 'login');
-            deferredResult.addMethod(this, 'retriveCards');
-            var self = this;
-            deferredResult.addCallback(function () {
-                var popup = getPopup();
-                if (popup) {
-                    popup.MochiKit.Signal.signal(popup.Clipperz.PM.RunTime.popupController.loginController(), 'userLoggedIn', {user: user});
-                }
-                self._initializing = false;
-            });
-            deferredResult.addErrback(function (anError) {
-                var popup = getPopup();
-                if (popup) {
-                    popup.MochiKit.Signal.signal(popup.Clipperz.PM.RunTime.popupController.headerComponent(), 'logout');
-                }
-                self._initializing = false;
-            });
-            deferredResult.callback();
+            this._loginController.login({username:username, passphrase:passphrase});
         }
 	},
 
-    'retriveCards': function () {
-
-        var objectCollectResultsConfiguration = {
-            '_rowObject':           MochiKit.Async.succeed,
-            '_reference':           MochiKit.Base.methodcaller('reference'),
-            '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
-            'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
-            'Cards.title':          MochiKit.Base.methodcaller('label'),
-            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences')
-        };
-
-        var deferredResult = new Clipperz.Async.Deferred("CardsController.retriveCards", {trace:false});
-        deferredResult.addMethod(this._user, 'getRecords');
-        deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("CardsController.retriveCards - collectResults", objectCollectResultsConfiguration, {trace:false}));
-        deferredResult.addCallback(Clipperz.Async.collectAll);
-        deferredResult.addCallback(MochiKit.Base.bind(function (someRows) {
-            Clipperz.PM.RunTime.mainController.setCards(someRows);
-            return someRows;
-        }, this));
-        deferredResult.callback();
-        
-        return deferredResult;
-    },
-
-    //-------------------------------------------------------------------------
-
-    'handleLoggedIn': function(anEvent) {
-        this._user = anEvent['user'];
+    'login': function(parameters) {
+        this._loginController.login({username:parameters.username, passphrase:parameters.passphrase, progressListener:parameters.progressListener});
     },
 
 	//-----------------------------------------------------------------------------
 
 	'handleLogout': function(anEvent) {
-	    this._user =  null;
+        this._user.logout();
+        this._user = null;
         this._cards = null;
-	},
+        this._cardRows = null;
+    },
+
+	//-----------------------------------------------------------------------------
+
+    'handleDirectLogin': function (aDirectLoginRef) {
+        for (var r in this._cardRows) {
+            var directLogins = this._cardRows[r]['Cards.directLogins'];
+            for (var d in directLogins) {
+                var directLogin = directLogins[d];
+                if (aDirectLoginRef == directLogin['_reference']) {
+                    Clipperz.PM.UI.Common.Controllers.DirectLoginRunner.openDirectLogin(directLogin['_rowObject']);
+                    break;
+                }
+            }
+        }
+    },
 
 	//-----------------------------------------------------------------------------
 	__syntaxFix__: "syntax fix"

@@ -26,14 +26,9 @@ refer to http://www.clipperz.com.
 Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
 Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController = function() {
-
     this._tree = null;
-    this._user = null;
-
-    this._cachedObjects = null;
-
 	return this;
-}
+};
 
 MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController.prototype, {
 
@@ -45,90 +40,15 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
 
     'run': function(args) {
         this._tree = args.tree;
-        this._user = args.user;
         cr.ui.Tree.decorate(this._tree);
-//        this.displayTreeItems();
-/*        var self = this;
-        setTimeout(function(){
-            self._displayTreeItems([
-                {'Cards.title': "zzz - xxx - ccc"},
-                {'Cards.title': "xxx - bbb - qqq"},
-                {'Cards.title': "zzz - xxx - aaa"},
-                {'Cards.title': "zzz - aaa - bbb"},
-                {'Cards.title': "ddd - xxx"},
-                {'Cards.title': "bbb"},
-            ]);
-        }, 3000);
-*/        
-
-        var self = this;
-        setTimeout(function(){
-            self.displayTreeItems();
-        }, 3000);
-        
+        this.displayTreeItems();
     },
 
     //-----------------------------------------------------------------------------
 
     'displayTreeItems': function () {
-        return Clipperz.Async.callbacks("CardsController.displayTreeItems", [
-            MochiKit.Base.method(this, 'getCards'),
-            MochiKit.Base.method(this, '_displayTreeItems')
-        ], {trace:false});
-    },
-
-    //-----------------------------------------------------------------------------
-    
-    'getCards': function () {
-
-        var deferredResult;
-        var cards = Clipperz.PM.RunTime.mainController.cards();
-        if (cards) {
-            deferredResult = MochiKit.Async.succeed(cards);
-        } else {
-            deferredResult = new Clipperz.Async.Deferred("CardsController.getCards", {trace:true});
-            deferredResult.addMethod(this, 'retriveCards');
-            deferredResult.callback();
-        }
-        return deferredResult;
-    },
-
-    //-----------------------------------------------------------------------------
-
-    'retriveCards': function () {
-
-        var objectCollectResultsConfiguration = {
-            '_rowObject':           MochiKit.Async.succeed,
-            '_reference':           MochiKit.Base.methodcaller('reference'),
-            '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
-            'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
-            'Cards.title':          MochiKit.Base.methodcaller('label'),
-            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences')
-        };
-
-        var deferredResult = new Clipperz.Async.Deferred("CardsController.retriveCards", {trace:true});
-        deferredResult.addMethod(this._user, 'getRecords');
-        deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("CardsController.retriveCards - collectResults", objectCollectResultsConfiguration, {trace:true}));
-        deferredResult.addCallback(Clipperz.Async.collectAll);
-        deferredResult.addCallback(MochiKit.Base.bind(function (someRows) {
-            Clipperz.PM.RunTime.mainController.setCards(someRows);
-            return someRows;
-        }, this));
-        deferredResult.callback();
-        
-        return deferredResult;
-    },
-
-    //-----------------------------------------------------------------------------
-
-    '_displayTreeItems': function (someRows) {
-
         const separator = localStorage['treeSeparator'];
-        
-        someRows.sort(function(a, b) {
-            return a['Cards.title'].localeCompare(b['Cards.title']);
-        });
-        
+        var cards = Clipperz.PM.RunTime.mainController.cards();
         var findTreeItem = function(items, label) {
             for (i in items) {
                 var item = items[i];
@@ -137,11 +57,10 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                 }
             }
             return null;
-        }
-
-        for (var r in someRows) {
-            var row = someRows[r];
-            var title = row['Cards.title'];
+        };
+        for (var c in cards) {
+            var card = cards[c];
+            var title = card.title;
             var nodeLabels;
             if (separator && separator.length > 0) {
                 nodeLabels = title.split(separator);
@@ -156,19 +75,20 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                 if (item == null) {
                     item = new cr.ui.TreeItem();
                     item.label = label;
-                    var favicon = row['Cards.favicon'];
                     if (n == lastIndex) {
-                        item.icon = favicon ? favicon : '/images/webpage.png';
-                        var directLogins = row['Cards.directLogins'];
+                        item.icon = card.favicon;
+                        var directLogins = card.directLogins;
                         for (var d in directLogins) {
                             var directLogin = directLogins[d];
                             var directLoginItem = new cr.ui.TreeItem();
-                            directLoginItem.label = directLogin['label'] + " [direct login]"; //TODO
-                            var favicon = directLogin['favicon'];
-                            directLoginItem.icon = favicon ? favicon : '/images/webpage.png';
+                            directLoginItem.label = directLogin.label + " [direct login]"; //TODO: replace hardcoded string with some hint or icon
+                            directLoginItem.icon = directLogin.favicon;
                             item.add(directLoginItem);
-                            MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin['_rowObject']));
+                            MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin.reference));
                         }
+                        //TODO: add some other actions for the card right into the tree under the card node
+                        //TODO: such as copy fields (URL/login/password/...) to clipboard - it would be convenient when direct login doesn't work
+                        //TODO: such items as edit/delete also could be placed right into the tree under subnode with name "more" or "operations"
                     }
                     current.add(item);
                 }
@@ -176,11 +96,10 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
             }
         }
     },
-    
-    'handleDirectLoginClick': function (aDirectLogin, anEvent) {
+
+    'handleDirectLoginClick': function (aDirectLoginRef, anEvent) {
         anEvent.preventDefault();
-//      aDirectLogin.runDirectLogin();
-        Clipperz.PM.UI.Common.Controllers.DirectLoginRunner.openDirectLogin(aDirectLogin);
+        Clipperz.PM.RunTime.mainController.handleDirectLogin(aDirectLoginRef);
     },
 
 	//=============================================================================

@@ -36,10 +36,6 @@ Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupController = function(args) {
     this._headerComponent = null;
     this._pageComponent =   null;
 
-    this._passphraseDelegateLock = new MochiKit.Async.DeferredLock();
-    this._passphraseDelegateLock.acquire();
-    this._passphraseDelegate = null;
-	
 	return this;
 }
 
@@ -58,8 +54,9 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
     'headerComponent': function() {
         if (this._headerComponent == null) {
             this._headerComponent = new Clipperz.PM.UI.Extensions.Chrome.Components.PageHeader();
+            MochiKit.Signal.connect(this._headerComponent, 'logout', Clipperz.PM.RunTime.mainController, 'handleLogout');
+            MochiKit.Signal.connect(this._headerComponent, 'logout', this, 'handleLogout');
         }
-        
         return this._headerComponent;
     },
 
@@ -69,7 +66,6 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
         if (this._pageComponent == null) {
             this._pageComponent = new Clipperz.PM.UI.Extensions.Chrome.Components.Page({element:MochiKit.DOM.getElement('mainDiv')});
         }
-        
         return this._pageComponent;
     },
 
@@ -78,22 +74,15 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
     'loginController': function() {
         if (this._loginController == null) {
             this._loginController = new Clipperz.PM.UI.Extensions.Chrome.Controllers.LoginController(this.args());
-
-            MochiKit.Signal.connect(this._loginController, 'userLoggedIn', Clipperz.PM.RunTime.mainController, 'handleLoggedIn');
             MochiKit.Signal.connect(this._loginController, 'userLoggedIn', this, 'handleLoggedIn');
         }
-
         return this._loginController;
     },
 
     'appController': function() {
         if (this._appController == null) {
             this._appController = new Clipperz.PM.UI.Extensions.Chrome.Controllers.AppController();
-
-            MochiKit.Signal.connect(this._appController, 'logout', Clipperz.PM.RunTime.mainController, 'handleLogout');
-            MochiKit.Signal.connect(this._appController, 'logout', this, 'handleLogout');
         }
-
         return this._appController;
     },
 
@@ -101,24 +90,19 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
 
 	'run': function() {
         this.pageComponent().slotNamed('header').setContent(this.headerComponent());
-
         this.pageComponent().render();
-        
-        MochiKit.Signal.connect(this.headerComponent(), 'logout', this.appController(), 'handleLogout');
-
         if (Clipperz.PM.RunTime.mainController.cards()) {
-            var user = Clipperz.PM.RunTime.mainController.user();
-            MochiKit.Signal.signal(this.loginController(), 'userLoggedIn', {user: user});
-        } else if (!Clipperz.PM.RunTime.mainController.initializing()) {
+            MochiKit.Signal.signal(this.loginController(), 'userLoggedIn');
+        } else {
             this.loginController().run({slot:this.pageComponent().slotNamed('body')});
         }
 	},
 
     //-----------------------------------------------------------------------------
 
-    'handleLoggedIn': function(anEvent) {
+    'handleLoggedIn': function() {
         this.headerComponent().switchToLoggedMode();
-        this.appController().run({slot:this.pageComponent().slotNamed('body'), user:anEvent['user']});
+        this.appController().run({slot:this.pageComponent().slotNamed('body')});
     },
 
     //-----------------------------------------------------------------------------
@@ -128,53 +112,5 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
     },
 
     //-----------------------------------------------------------------------------
-
-    'getPassphrase': function () {
-        var deferredResult;
-
-        deferredResult = new Clipperz.Async.Deferred("PopupController.getPassphrase", {trace:false});
-
-        deferredResult.acquireLock(this._passphraseDelegateLock);
-        deferredResult.addMethod(this, 'invokePassphraseDelegate');
-        deferredResult.releaseLock(this._passphraseDelegateLock);
-        deferredResult.callback();
-    
-        return deferredResult;
-    },
-
-    //.........................................................................
-    
-    'invokePassphraseDelegate': function () {
-        return this._passphraseDelegate();
-    },
-
-    'passphraseDelegateLock': function () {
-        return this._passphraseDelegateLock;
-    },
-
-    //.........................................................................
-
-    'setPassphraseDelegate': function (aDelegate) {
-        var shouldReleaseLock;
-
-        shouldReleaseLock = (this._passphraseDelegate == null);
-
-        this._passphraseDelegate = aDelegate;
-
-        if (shouldReleaseLock) {
-            this._passphraseDelegateLock.release();
-        }
-    },
-    
-    //.........................................................................
-
-    'removePassphraseDelegate': function (aDelegate) {
-        if (this._passphraseDelegate == aDelegate) {
-            this._passphraseDelegate = null;
-            this._passphraseDelegateLock.acquire();
-        }
-    },
-
-	//-----------------------------------------------------------------------------
 	__syntaxFix__: "syntax fix"
 });

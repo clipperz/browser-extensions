@@ -27,11 +27,8 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Components');
 
 Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress = function(args) {
 	args = args || {};
-
 	Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress.superclass.constructor.apply(this, arguments);
-
 	this._deferred = null;
-
 	return this;
 }
 
@@ -58,24 +55,14 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress, 
 	//-------------------------------------------------------------------------
 
 	'renderSelf': function() {
-//		var loginProgressElement;
-//		
-//		loginProgressElement = MochiKit.DOM.getElement('loginProgress');
-//		
-//		if (loginProgressElement == null) {
-//			loginProgressElement = this.append(this.element(), {tag:'div', id:'loginProgress', cls:'LoginProgress'}, true);
-//		}
-
 //console.log(">> LoginProgress.renderSelf", this.element());
 		this.append(this.element(), {tag:'div', id:'loginProgress', cls:'LoginProgress', children: [
-//		this.append(loginProgressElement, [
 			{tag:'div', cls:'header', children:[
 				{tag:'h3', id:this.getId('title'), html:chrome.i18n.getMessage('popup_page_login_progress_header_title')}
 			]},
 			{tag:'div', cls:'body', children:[
 				{tag:'div', id:this.getId('progressBar')},
 				{tag:'div', id:this.getId('errorBox'), cls:'errorBox', children:[
-//					{tag:'div',	cls:'img ALERT', children:[{tag:'div'}]},
 					{tag:'div',	cls:'img ALERT', children:[{tag:'canvas', id:this.getId('canvas')}]},
 					{tag:'p', html:chrome.i18n.getMessage('popup_page_login_progress_error_message')}
 				]}
@@ -88,13 +75,9 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress, 
 				]}
 			]}
 		]});
-//		]);
-
 		Clipperz.PM.UI.Canvas.marks['!'](this.getElement('canvas'), "#ffffff");
-
 		this.addComponent(new Clipperz.PM.UI.Common.Components.ProgressBar({'element':this.getElement('progressBar')}));
 		MochiKit.Style.hideElement(this.getElement('errorBox'));
-		
 		MochiKit.Signal.connect(this.getId('buttonLink'), 'onclick', this, 'cancelEventHandler');
 	},
 
@@ -108,7 +91,6 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress, 
 
 	'cancelEventHandler': function(anEvent) {
 		anEvent.preventDefault();
-		
 		MochiKit.Signal.signal(this, 'cancelEvent');
 	},
 
@@ -120,29 +102,26 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.LoginProgress, 
 
 	//-------------------------------------------------------------------------
 
-	'showErrorMessage': function() {
+	'showErrorMessage': function(msg) {
 		this.getElement('buttonLink').innerHTML = chrome.i18n.getMessage('popup_page_login_progress_error_message_button_text');
-
 		MochiKit.Style.hideElement(this.getElement('progressBar'));
-
 		this.getElement('title').innerHTML = chrome.i18n.getMessage('popup_page_login_progress_error_message_title');
-		MochiKit.Style.showElement(this.getElement('errorBox'));
+        var errBox = this.getElement('errorBox');
+        errBox.getElementsByTagName('p')[0].innerHTML = msg;
+        MochiKit.Style.showElement(errBox);
 		MochiKit.Style.showElement(this.getElement('buttonArea'));
 	},
 
 	//-------------------------------------------------------------------------
 
 	'deferredHideModalAndRemove': function(someParameters, aResult) {
-		var	deferredResult;
-
-		deferredResult = new Clipperz.Async.Deferred("LoginProgress.deferredHideModalAndRemove", {trace:false});
+		var deferredResult = new Clipperz.Async.Deferred("LoginProgress.deferredHideModalAndRemove", {trace:false});
 		deferredResult.addMethod(this, 'deferredHideModal');
 		deferredResult.addMethod(this, 'remove');
 		deferredResult.addCallback(function () {
 			return aResult;
 		});
 		deferredResult.callback(someParameters);
-
 		return deferredResult;
 	},
 
