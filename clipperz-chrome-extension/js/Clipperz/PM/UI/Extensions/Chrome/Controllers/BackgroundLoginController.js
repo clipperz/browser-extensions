@@ -73,7 +73,30 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
             '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
             'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
             'Cards.title':          MochiKit.Base.methodcaller('label'),
-            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences')
+            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences'),
+            'Cards.notes':          MochiKit.Base.methodcaller('notes'),
+            'Cards.fields':         MochiKit.Base.methodcaller(
+                                        function(){
+                                            return Clipperz.Async.callbacks("Record.fieldReferences", [
+                                                MochiKit.Base.method(this, 'fields'),
+                                                MochiKit.Base.values,
+                                                function (someFields) {
+                                                    var result = [];
+                                                    var c = someFields.length;
+                                                    for (var i=0; i<c; i++) {
+                                                        result.push(Clipperz.Async.collectResults("Record.fieldReferences - collectResults", {
+                                                            '_reference': MochiKit.Base.methodcaller('reference'),
+                                                            'label': MochiKit.Base.methodcaller('label'),
+                                                            'value': MochiKit.Base.methodcaller('value'),
+                                                            'actionType': MochiKit.Base.methodcaller('actionType'),
+                                                            'isHidden': MochiKit.Base.methodcaller('isHidden')
+                                                        }, {trace:false})(someFields[i]));
+                                                    }
+                                                    return result;
+                                                },
+                                                Clipperz.Async.collectAll
+                                            ], {trace:false});
+                                        })
         };
         deferredResult.addMethod(user, 'getRecords');
         deferredResult.addCallback(MochiKit.Base.map, Clipperz.Async.collectResults("BackgroundLoginController.doLogin - collectResults", objectCollectResultsConfiguration, {trace:trace}));
@@ -83,9 +106,10 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                 return a['Cards.title'].localeCompare(b['Cards.title']);
             });
             var cards = [];
+            var directLoginMap = {};
             for (var r in someRows) {
                 var row = someRows[r];
-                var card = {directLogins:[]};
+                var card = {directLogins:[], notes:[], fields:[]};
                 card.title = row['Cards.title'];
                 var defaultIcon = '/images/webpage.png';
                 card.favicon = row['Cards.favicon'] ? row['Cards.favicon'] : defaultIcon;
@@ -94,12 +118,27 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                     var directLogin = directLogins[d];
                     card.directLogins[d] = {label:directLogin['label']};
                     card.directLogins[d].favicon = directLogin['favicon'] ? directLogin['favicon'] : defaultIcon;
-                    card.directLogins[d].reference = directLogin['_reference'];
+                    var directLoginRef = directLogin['_reference'];
+                    card.directLogins[d].reference = directLoginRef;
+                    directLoginMap[directLoginRef] = directLogin['_rowObject'];
+                }
+                card.notes = row['Cards.notes'];
+                var fields = row['Cards.fields'];
+                var fieldNumber = 0;
+                for (var f in fields) {
+                    var field = fields[f];
+                    card.fields[fieldNumber++] = {
+                        label:field.label,
+                        value:field.value,
+                        actionType:field.actionType,
+                        isHidden:field.isHidden,
+                        reference:field.reference
+                    };
                 }
                 cards[r] = card;
             }
             Clipperz.PM.RunTime.mainController.setCards(cards);
-            Clipperz.PM.RunTime.mainController.setCardRows(someRows);
+            Clipperz.PM.RunTime.mainController.setDirectLoginMap(directLoginMap);
             return someRows;
         }, this));
         deferredResult.addCallback(function(aLoginProgress, res) {

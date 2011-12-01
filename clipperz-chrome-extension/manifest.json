@@ -16,5 +16,5 @@
 	"background_page": "html/background.html",
 	"homepage_url": "https://www.clipperz.com",
 	"options_page": "html/options.html",
-	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*"]
+	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*", "clipboardWrite"]
 }

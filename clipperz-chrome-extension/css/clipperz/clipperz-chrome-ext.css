@@ -24,9 +24,12 @@ refer to http://www.clipperz.com.
 */
 
 body {
-    min-width: 360px;
-    min-height: 500px;
-    overflow-x: hidden;
+}
+
+.pageBody {
+    width: 360px;
+    height: 500px;
+    overflow: auto;
 }
 
 /* @group Loading */
@@ -410,8 +413,54 @@ div.loadingBar div.loadingBarProgress {
 /* @group Popup page body */
 
 #mainDiv .cardTree tree {
-    height: 500px;
-    overflow: auto;
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+    font-family: tahoma,serif;
+    font-size: 12pt;
+}
+
+#mainDiv .cardTree tree .directLogin:hover:after,
+#mainDiv .cardTree tree .URL:hover:after,
+#mainDiv .cardTree tree .EMAIL:hover:after,
+#mainDiv .cardTree tree .PASSWORD:hover:after,
+#mainDiv .cardTree tree .NONE:hover:after {
+    content: url('/images/copy.png');
+    margin-left: 2px;
+    vertical-align: middle;
+}
+
+#mainDiv .cardTree tree .directLogin {
+    cursor: pointer;
+    color: #15428b;
+    text-decoration: underline;
+}
+
+#mainDiv .cardTree tree .directLogin:hover:after {
+    content: url('/images/link.png');
+}
+
+#mainDiv .cardTree tree .URL {
+    background-image: url("/images/web.png");
+    cursor: pointer;
+    color: #003DB8;
+    text-decoration: underline;
+}
+
+#mainDiv .cardTree tree .URL:hover:after {
+    content: url('/images/link.png');
+}
+
+#mainDiv .cardTree tree .EMAIL {
+    background-image: url("/images/email.png");
+}
+
+#mainDiv .cardTree tree .PASSWORD {
+    background-image: url("/images/lock.png");
+}
+
+#mainDiv .cardTree tree .NONE {
+    background-image: url("/images/txt.png");
 }
 
 /* @end */

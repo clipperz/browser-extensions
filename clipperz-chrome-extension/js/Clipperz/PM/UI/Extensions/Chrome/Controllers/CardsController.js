@@ -27,14 +27,14 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
 Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController = function() {
     this._tree = null;
-	return this;
+    return this;
 };
 
 MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController.prototype, {
 
-	'toString': function() {
-		return "Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController";
-	},
+    'toString': function() {
+        return "Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController";
+    },
 
     //-----------------------------------------------------------------------------
 
@@ -49,6 +49,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
     'displayTreeItems': function () {
         const separator = localStorage['treeSeparator'];
         var cards = Clipperz.PM.RunTime.mainController.cards();
+        var lastActId = Clipperz.PM.RunTime.mainController.lastActRef();
         var findTreeItem = function(items, label) {
             for (i in items) {
                 var item = items[i];
@@ -61,12 +62,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
         for (var c in cards) {
             var card = cards[c];
             var title = card.title;
-            var nodeLabels;
-            if (separator && separator.length > 0) {
-                nodeLabels = title.split(separator);
-            } else {
-                nodeLabels = [title];
-            }
+            var nodeLabels = title.split(separator);
             var current = this._tree;
             var lastIndex = nodeLabels.length - 1;
             for (var n in nodeLabels) {
@@ -77,18 +73,46 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                     item.label = label;
                     if (n == lastIndex) {
                         item.icon = card.favicon;
-                        var directLogins = card.directLogins;
-                        for (var d in directLogins) {
-                            var directLogin = directLogins[d];
+                        if (card.notes) {
+                            item.rowElement.title = card.notes;
+                        }
+                        for (var d in card.directLogins) {
+                            var directLogin = card.directLogins[d];
                             var directLoginItem = new cr.ui.TreeItem();
-                            directLoginItem.label = directLogin.label + " [direct login]"; //TODO: replace hardcoded string with some hint or icon
+                            directLoginItem.label = directLogin.label;
                             directLoginItem.icon = directLogin.favicon;
+                            directLoginItem.labelElement.className += " directLogin";
                             item.add(directLoginItem);
                             MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin.reference));
+/*
+                            if (directLogin.reference == lastActId) {
+                                directLoginItem.reveal();
+                            }
+*/
                         }
-                        //TODO: add some other actions for the card right into the tree under the card node
-                        //TODO: such as copy fields (URL/login/password/...) to clipboard - it would be convenient when direct login doesn't work
+                        for (var f in card.fields) {
+                            var field = card.fields[f];
+                            var fieldsItem = new cr.ui.TreeItem();
+                            fieldsItem.label = field.label;
+                            fieldsItem.labelElement.className += (" " + field.actionType);
+                            if (!field.isHidden) {
+                                fieldsItem.labelElement.title = field.value;
+                            }
+                            if (field.actionType == "URL") {
+                                MochiKit.Signal.connect(fieldsItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleUrlFieldClick', field.value, field.reference));
+                            } else {
+                                MochiKit.Signal.connect(fieldsItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleCopyFieldClick', field.value, field.reference));
+                            }
+                            item.add(fieldsItem);
+/*
+                            if (field.reference == lastActId) {
+                                fieldsItem.reveal();
+                            }
+*/
+                        }
+
                         //TODO: such items as edit/delete also could be placed right into the tree under subnode with name "more" or "operations"
+
                     }
                     current.add(item);
                 }
@@ -99,9 +123,26 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
 
     'handleDirectLoginClick': function (aDirectLoginRef, anEvent) {
         anEvent.preventDefault();
+        Clipperz.PM.RunTime.mainController.setLastActRef(aDirectLoginRef);
         Clipperz.PM.RunTime.mainController.handleDirectLogin(aDirectLoginRef);
     },
 
-	//=============================================================================
-	__syntaxFix__: "syntax fix"
+    'handleUrlFieldClick': function (value, ref, anEvent) {
+        anEvent.preventDefault();
+        Clipperz.PM.RunTime.mainController.setLastActRef(ref);
+        if (value.indexOf('://') < 0) {
+            value = "http://" + value;
+        }
+        window.open(value);
+    },
+
+    'handleCopyFieldClick': function (value, ref, anEvent) {
+        anEvent.preventDefault();
+        Clipperz.PM.RunTime.mainController.setLastActRef(ref);
+        Clipperz.PM.RunTime.mainController.handleCopy(value);
+        window.close();
+    },
+
+    //=============================================================================
+    __syntaxFix__: "syntax fix"
 });
