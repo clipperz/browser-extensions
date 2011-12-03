@@ -1,44 +1,44 @@
 /*
 
-Copyright 2008-2011 Clipperz Srl
+ Copyright 2008-2011 Clipperz Srl
 
-This file is part of Clipperz Community Edition.
-Clipperz Community Edition is an online password manager.
-For further information about its features and functionalities please
-refer to http://www.clipperz.com.
+ This file is part of Clipperz Community Edition.
+ Clipperz Community Edition is an online password manager.
+ For further information about its features and functionalities please
+ refer to http://www.clipperz.com.
 
-* Clipperz Community Edition is free software: you can redistribute
-  it and/or modify it under the terms of the GNU Affero General Public
-  License as published by the Free Software Foundation, either version
-  3 of the License, or (at your option) any later version.
+ * Clipperz Community Edition is free software: you can redistribute
+ it and/or modify it under the terms of the GNU Affero General Public
+ License as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-* Clipperz Community Edition is distributed in the hope that it will
-  be useful, but WITHOUT ANY WARRANTY; without even the implied
-  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU Affero General Public License for more details.
+ * Clipperz Community Edition is distributed in the hope that it will
+ be useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU Affero General Public License for more details.
 
-* You should have received a copy of the GNU Affero General Public
-  License along with Clipperz Community Edition.  If not, see
-  <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public
+ License along with Clipperz Community Edition.  If not, see
+ <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
-Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController = function() {
+Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController = function () {
     this._tree = null;
     return this;
 };
 
 MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController.prototype, {
 
-    'toString': function() {
+    'toString':function () {
         return "Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsController";
     },
 
     //-----------------------------------------------------------------------------
 
-    'run': function(args) {
+    'run':function (args) {
         this._tree = args.tree;
         cr.ui.Tree.decorate(this._tree);
         this.displayTreeItems();
@@ -46,11 +46,12 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
 
     //-----------------------------------------------------------------------------
 
-    'displayTreeItems': function () {
+    'displayTreeItems':function () {
         const separator = localStorage['treeSeparator'];
         var cards = Clipperz.PM.RunTime.mainController.cards();
-        var lastActId = Clipperz.PM.RunTime.mainController.lastActRef();
-        var findTreeItem = function(items, label) {
+        var lastActRef = Clipperz.PM.RunTime.mainController.lastActRef();
+        var lastActItem = null;
+        var findTreeItem = function (items, label) {
             for (i in items) {
                 var item = items[i];
                 if (item.label == label) {
@@ -84,11 +85,9 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                             directLoginItem.labelElement.className += " directLogin";
                             item.add(directLoginItem);
                             MochiKit.Signal.connect(directLoginItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleDirectLoginClick', directLogin.reference));
-/*
-                            if (directLogin.reference == lastActId) {
-                                directLoginItem.reveal();
+                            if (directLogin.reference == lastActRef) {
+                                lastActItem = directLoginItem;
                             }
-*/
                         }
                         for (var f in card.fields) {
                             var field = card.fields[f];
@@ -104,11 +103,9 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                                 MochiKit.Signal.connect(fieldsItem.labelElement, 'onclick', MochiKit.Base.method(this, 'handleCopyFieldClick', field.value, field.reference));
                             }
                             item.add(fieldsItem);
-/*
-                            if (field.reference == lastActId) {
-                                fieldsItem.reveal();
+                            if (field.reference == lastActRef) {
+                                lastActItem = fieldsItem;
                             }
-*/
                         }
 
                         //TODO: such items as edit/delete also could be placed right into the tree under subnode with name "more" or "operations"
@@ -119,15 +116,18 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
                 current = item;
             }
         }
+        if (lastActItem) {
+            lastActItem.reveal();
+        }
     },
 
-    'handleDirectLoginClick': function (aDirectLoginRef, anEvent) {
+    'handleDirectLoginClick':function (aDirectLoginRef, anEvent) {
         anEvent.preventDefault();
         Clipperz.PM.RunTime.mainController.setLastActRef(aDirectLoginRef);
         Clipperz.PM.RunTime.mainController.handleDirectLogin(aDirectLoginRef);
     },
 
-    'handleUrlFieldClick': function (value, ref, anEvent) {
+    'handleUrlFieldClick':function (value, ref, anEvent) {
         anEvent.preventDefault();
         Clipperz.PM.RunTime.mainController.setLastActRef(ref);
         if (value.indexOf('://') < 0) {
@@ -136,7 +136,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
         window.open(value);
     },
 
-    'handleCopyFieldClick': function (value, ref, anEvent) {
+    'handleCopyFieldClick':function (value, ref, anEvent) {
         anEvent.preventDefault();
         Clipperz.PM.RunTime.mainController.setLastActRef(ref);
         Clipperz.PM.RunTime.mainController.handleCopy(value);
@@ -144,5 +144,5 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.CardsControlle
     },
 
     //=============================================================================
-    __syntaxFix__: "syntax fix"
+    __syntaxFix__:"syntax fix"
 });
