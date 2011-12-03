@@ -89,13 +89,13 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                                                             'type':				MochiKit.Base.methodcaller('type'),
                                                             'formAttributes':	MochiKit.Base.methodcaller('formAttributes'),
                                                             'inputValues':		MochiKit.Base.methodcaller('inputValues')
-                                                        }, {trace:false})(someDirectLogins[i]));
+                                                        }, {trace:trace})(someDirectLogins[i]));
                                                     }
 
                                                     return result;
                                                 },
                                                 Clipperz.Async.collectAll
-                                            ], {trace:false});
+                                            ], {trace:trace});
                                         }),
             'Cards.notes':          MochiKit.Base.methodcaller('notes'),
             'Cards.fields':         MochiKit.Base.methodcaller(
@@ -113,12 +113,12 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                                                             'value':        MochiKit.Base.methodcaller('value'),
                                                             'actionType':   MochiKit.Base.methodcaller('actionType'),
                                                             'isHidden':     MochiKit.Base.methodcaller('isHidden')
-                                                        }, {trace:false})(someFields[i]));
+                                                        }, {trace:trace})(someFields[i]));
                                                     }
                                                     return result;
                                                 },
                                                 Clipperz.Async.collectAll
-                                            ], {trace:false});
+                                            ], {trace:trace});
                                         })
         };
         deferredResult.addMethod(user, 'getRecords');
@@ -139,11 +139,16 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                 var directLogins = row['Cards.directLogins'];
                 for (var d in directLogins) {
                     var directLogin = directLogins[d];
-                    card.directLogins[d] = {label:directLogin['label']};
-                    card.directLogins[d].favicon = directLogin['favicon'] ? directLogin['favicon'] : defaultIcon;
                     var directLoginRef = directLogin['_reference'];
-                    card.directLogins[d].reference = directLoginRef;
-                    directLoginMap[directLoginRef] = directLogin;
+                    card.directLogins[d] = {
+                        reference:directLoginRef,
+                        label:directLogin.label,
+                        favicon:directLogin.favicon ? directLogin.favicon : defaultIcon,
+                        type:directLogin.type,
+                        formAttributes:directLogin.formAttributes,
+                        inputValues:directLogin.inputValues
+                    };
+                    directLoginMap[directLoginRef] = new Clipperz.PM.DataModel.DirectLoginPlainWrapper(directLogin);
                 }
                 card.notes = row['Cards.notes'];
                 var fields = row['Cards.fields'];
@@ -169,7 +174,6 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
             return res;
         }, loginProgress);
         deferredResult.addCallback(function () {
-            Clipperz.PM.RunTime.mainController.setUser(user);
             loginProgress.stop();
             self._inProgress = false;
             self._loginProgress = null;

@@ -27,7 +27,6 @@ Clipperz.Base.module('Clipperz.PM.UI.Extensions.Chrome.Controllers');
 
 Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController = function(args) {
     this._args = args;
-    this._user = null;
     this._cards = null;
     this._directLoginMap = null;
     this._lastActRef = null;
@@ -47,14 +46,11 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
 
     'setCards': function (cards) {
         this._cards = cards;
+        localStorage['cards'] = JSON.stringify(cards);
     },
 
     'setDirectLoginMap': function (directLoginMap) {
         this._directLoginMap = directLoginMap;
-    },
-
-    'setUser': function (user) {
-        this._user = user;
     },
 
     'lastActRef': function () {
@@ -72,10 +68,29 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
     //-----------------------------------------------------------------------------
 
     'run': function() {
-        var username = localStorage['username'];
-        var passphrase = localStorage['passphrase'];
-        if (username && passphrase) {
-            this._loginController.login({username:username, passphrase:passphrase});
+        var cards = localStorage['cards'];
+        if (cards) {
+            try {
+                this._cards = JSON.parse(cards);
+            } catch(e) {
+                //ignore
+            }
+        }
+        if (this._cards) {
+            this._directLoginMap = {};
+            for (var c in this._cards) {
+                var card = this._cards[c];
+                for (var d in card.directLogins) {
+                    var directLogin = card.directLogins[d];
+                    this._directLoginMap[directLogin.reference] = new Clipperz.PM.DataModel.DirectLoginPlainWrapper(directLogin);
+                }
+            }
+        } else {
+            var username = localStorage['username'];
+            var passphrase = localStorage['passphrase'];
+            if (username && passphrase) {
+                this._loginController.login({username:username, passphrase:passphrase});
+            }
         }
     },
 
@@ -86,8 +101,6 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.MainController
     //-----------------------------------------------------------------------------
 
     'handleLogout': function(anEvent) {
-        this._user.logout();
-        this._user = null;
         this._cards = null;
         this._directLoginMap = null;
         this._lastActRef = null;
