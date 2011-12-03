@@ -152,6 +152,11 @@ div.pageHeader div#buttons a {
     float: left;   
 }
 
+div.pageHeader div#buttons a#reload {
+    background: url('/images/reload.png') no-repeat;
+    float: left;
+}
+
 div.pageHeader div#buttons a#logout {
     background: url('/images/logout.png') no-repeat;
     float: right;

@@ -56,6 +56,8 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
             this._headerComponent = new Clipperz.PM.UI.Extensions.Chrome.Components.PageHeader();
             MochiKit.Signal.connect(this._headerComponent, 'logout', Clipperz.PM.RunTime.mainController, 'handleLogout');
             MochiKit.Signal.connect(this._headerComponent, 'logout', this, 'handleLogout');
+            MochiKit.Signal.connect(this._headerComponent, 'reload', Clipperz.PM.RunTime.mainController, 'handleLogout');
+            MochiKit.Signal.connect(this._headerComponent, 'reload', this, 'handleReload');
         }
         return this._headerComponent;
     },
@@ -108,6 +110,12 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.PopupControlle
     //-----------------------------------------------------------------------------
 
     'handleLogout': function(anEvent) {
+        this.loginController().run({slot:this.pageComponent().slotNamed('body')});
+    },
+
+    'handleReload': function(anEvent) {
+        delete localStorage['cards'];
+        Clipperz.PM.RunTime.mainController.run();
         this.loginController().run({slot:this.pageComponent().slotNamed('body')});
     },
 

@@ -43,6 +43,10 @@
         "message": "keep it to yourself!",
         "description": "The slogan in the header of the popup page"
     },
+    "popup_page_header_reload_button_title": {
+        "message": "Reload",
+        "description": "The title of the Reload button in the header of the popup page"
+    },
     "popup_page_header_logout_button_title": {
         "message": "Logout",
         "description": "The title of the Logout button in the header of the popup page"

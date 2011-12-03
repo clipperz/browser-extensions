@@ -53,12 +53,14 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.PageHeader, Cli
                 {tag: 'h5', cls: 'clipperzPayoff', html: chrome.i18n.getMessage('popup_page_header_slogan')}
             ]},
             {tag: 'div', id: 'buttons', children: [
+                {tag: 'a', id: 'reload', href: '#', title: chrome.i18n.getMessage('popup_page_header_reload_button_title')},
                 {tag: 'a', id: 'logout', href: '#', title: chrome.i18n.getMessage('popup_page_header_logout_button_title')}
             ]},
             {tag: 'hr'}
         ]);
 
         MochiKit.Signal.connect('logout', 'onclick', this, 'handleLogout');
+        MochiKit.Signal.connect('reload', 'onclick', this, 'handleReload');
     },
     
     //-------------------------------------------------------------------------
@@ -79,11 +81,20 @@ Clipperz.Base.extend(Clipperz.PM.UI.Extensions.Chrome.Components.PageHeader, Cli
         deferredResult.addCallback(MochiKit.Signal.signal, this, 'logout');
         deferredResult.addMethod(this, 'switchToNotLoggedMode');
         deferredResult.callback();
-
         return deferredResult;
-
     },
-    
+
+    'handleReload' : function(anEvent) {
+        var deferredResult;
+        deferredResult = new Clipperz.Async.Deferred("PageHeader.handleReload", {
+            trace : false
+        });
+        deferredResult.addCallback(MochiKit.Signal.signal, this, 'reload');
+        deferredResult.addMethod(this, 'switchToNotLoggedMode');
+        deferredResult.callback();
+        return deferredResult;
+    },
+
     //-------------------------------------------------------------------------
     
     __syntaxFix__ : "syntax fix"

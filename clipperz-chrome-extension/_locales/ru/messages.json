@@ -43,6 +43,10 @@
         "message": "держи при себе!",
         "description": "The slogan in the header of the popup page"
     },
+    "popup_page_header_reload_button_title": {
+        "message": "Перезагрузить",
+        "description": "The title of the Reload button in the header of the popup page"
+    },
     "popup_page_header_logout_button_title": {
         "message": "Выход",
         "description": "The title of the Logout button in the header of the popup page"
