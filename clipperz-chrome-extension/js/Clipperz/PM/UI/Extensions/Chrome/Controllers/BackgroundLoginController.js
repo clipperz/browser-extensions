@@ -73,23 +73,46 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
             '_searchableContent':   MochiKit.Base.methodcaller('searchableContent'),
             'Cards.favicon':        MochiKit.Base.methodcaller('favicon'),
             'Cards.title':          MochiKit.Base.methodcaller('label'),
-            'Cards.directLogins':   MochiKit.Base.methodcaller('directLoginReferences'),
+            'Cards.directLogins':   MochiKit.Base.methodcaller(
+                                        function () {
+                                            return Clipperz.Async.callbacks("BackgroundLoginController.directLoginReferences", [
+                                                MochiKit.Base.method(this, 'directLogins'),
+                                                MochiKit.Base.values,
+                                                function (someDirectLogins) {
+                                                    var result = [];
+                                                    var c = someDirectLogins.length;
+                                                    for (var i=0; i<c; i++) {
+                                                        result.push(Clipperz.Async.collectResults("BackgroundLoginController.directLoginReferences - collectResults", {
+                                                            '_reference':       MochiKit.Base.methodcaller('reference'),
+                                                            'label':            MochiKit.Base.methodcaller('label'),
+                                                            'favicon':          MochiKit.Base.methodcaller('favicon'),
+                                                            'type':				MochiKit.Base.methodcaller('type'),
+                                                            'formAttributes':	MochiKit.Base.methodcaller('formAttributes'),
+                                                            'inputValues':		MochiKit.Base.methodcaller('inputValues')
+                                                        }, {trace:false})(someDirectLogins[i]));
+                                                    }
+
+                                                    return result;
+                                                },
+                                                Clipperz.Async.collectAll
+                                            ], {trace:false});
+                                        }),
             'Cards.notes':          MochiKit.Base.methodcaller('notes'),
             'Cards.fields':         MochiKit.Base.methodcaller(
                                         function(){
-                                            return Clipperz.Async.callbacks("Record.fieldReferences", [
+                                            return Clipperz.Async.callbacks("BackgroundLoginController.fieldReferences", [
                                                 MochiKit.Base.method(this, 'fields'),
                                                 MochiKit.Base.values,
                                                 function (someFields) {
                                                     var result = [];
                                                     var c = someFields.length;
                                                     for (var i=0; i<c; i++) {
-                                                        result.push(Clipperz.Async.collectResults("Record.fieldReferences - collectResults", {
-                                                            '_reference': MochiKit.Base.methodcaller('reference'),
-                                                            'label': MochiKit.Base.methodcaller('label'),
-                                                            'value': MochiKit.Base.methodcaller('value'),
-                                                            'actionType': MochiKit.Base.methodcaller('actionType'),
-                                                            'isHidden': MochiKit.Base.methodcaller('isHidden')
+                                                        result.push(Clipperz.Async.collectResults("BackgroundLoginController.fieldReferences - collectResults", {
+                                                            '_reference':   MochiKit.Base.methodcaller('reference'),
+                                                            'label':        MochiKit.Base.methodcaller('label'),
+                                                            'value':        MochiKit.Base.methodcaller('value'),
+                                                            'actionType':   MochiKit.Base.methodcaller('actionType'),
+                                                            'isHidden':     MochiKit.Base.methodcaller('isHidden')
                                                         }, {trace:false})(someFields[i]));
                                                     }
                                                     return result;
@@ -120,7 +143,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                     card.directLogins[d].favicon = directLogin['favicon'] ? directLogin['favicon'] : defaultIcon;
                     var directLoginRef = directLogin['_reference'];
                     card.directLogins[d].reference = directLoginRef;
-                    directLoginMap[directLoginRef] = directLogin['_rowObject'];
+                    directLoginMap[directLoginRef] = directLogin;
                 }
                 card.notes = row['Cards.notes'];
                 var fields = row['Cards.fields'];
