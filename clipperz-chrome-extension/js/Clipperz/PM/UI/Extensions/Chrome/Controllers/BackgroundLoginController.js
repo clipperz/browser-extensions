@@ -155,7 +155,7 @@ MochiKit.Base.update(Clipperz.PM.UI.Extensions.Chrome.Controllers.BackgroundLogi
                         value:field.value,
                         actionType:field.actionType,
                         isHidden:field.isHidden,
-                        reference:field.reference
+                        reference:field['_reference']
                     };
                 }
                 cards[r] = card;
