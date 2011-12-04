@@ -1,0 +1,471 @@
+/*
+
+Copyright 2008-2011 Clipperz Srl
+
+This file is part of Clipperz Community Edition.
+Clipperz Community Edition is an online password manager.
+For further information about its features and functionalities please
+refer to http://www.clipperz.com.
+
+* Clipperz Community Edition is free software: you can redistribute
+  it and/or modify it under the terms of the GNU Affero General Public
+  License as published by the Free Software Foundation, either version
+  3 of the License, or (at your option) any later version.
+
+* Clipperz Community Edition is distributed in the hope that it will
+  be useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU Affero General Public License for more details.
+
+* You should have received a copy of the GNU Affero General Public
+  License along with Clipperz Community Edition.  If not, see
+  <http://www.gnu.org/licenses/>.
+
+*/
+
+body {
+}
+
+.pageBody {
+    width: 360px;
+    height: 500px;
+    overflow: auto;
+}
+
+/* @group Loading */
+
+div#loading {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-top: 60px;
+    width: 200px;
+}
+
+div#loading h2 {
+    padding-left: 20px;
+}
+
+/* @end */
+
+/* @group Options page */
+
+div#optionsBox {
+    border: solid 1px #ff9955;
+    padding: 10px;
+}
+
+div#optionsBox h1 {
+    margin: 0px 0px 5px 0px;
+    font-size: 18pt;
+    color: #1f2148;
+}
+
+div#optionsBox div#confirmation {
+    color: #dd5500;
+    font-weight: bold;
+    visibility: hidden;
+}
+
+.saved div#optionsBox div#confirmation {
+    visibility: visible;
+}
+
+div#optionsBox form.optionsForm label {
+    color: #1f2148;
+    font-size: 10pt;
+    display: block;
+    padding-top: 5px;
+}
+
+div#optionsBox form.optionsForm input {
+    width: 230px;
+    font-size: 12pt;
+    border: 1px solid #bb4924;
+    color: #333366;
+    background-color: white;
+    padding: 2px 5px;
+}
+
+div#optionsBox form.optionsForm label.checkbox {
+    display: inline;
+}
+
+div#optionsBox form.optionsForm .checkbox:hover {
+    cursor: pointer;
+}
+
+div#optionsBox form.optionsForm input.checkbox {
+    margin: 10px 8px 0px 0px;
+    height: auto;
+    width: auto;
+    border: 0px;
+}
+
+div#optionsBox form.optionsForm input.submit {
+    display: block;
+    margin: 10px 0px;
+    width: 140px;
+    border: 1px solid white;
+    color: white;
+    background-color: #dd5500;
+    padding: 6px;
+    font-size: 12pt;
+    height: auto;
+}
+
+div#optionsBox form.optionsForm input.submit:hover {
+    background-color: #773311;
+    color: white;
+    cursor: pointer;
+}
+
+/* @end */
+
+/* @group Header */
+
+div.pageHeader {
+}
+
+div.pageHeader hr {
+    margin: 0px;
+    margin-bottom: 2px;
+    clear: both;
+    background-color: #1f2148;
+    color: #1f2148;
+}
+
+div.pageHeader div#buttons {
+    margin: 2px 5px;
+    height: 16px;
+    display: none;
+}
+
+div.pageHeader.logged div#buttons {
+    display: block;
+}
+
+div.pageHeader div#buttons a {
+    display: block;
+    width: 16px;
+    height: 16px;
+    float: left;   
+}
+
+div.pageHeader div#buttons a#reload {
+    background: url('/images/reload.png') no-repeat;
+    float: left;
+}
+
+div.pageHeader div#buttons a#logout {
+    background: url('/images/logout.png') no-repeat;
+    float: right;
+}
+
+div#logoFrame {
+    background-color: #1f2148;
+    padding: 5px 10px;
+    min-height: 20px;
+}
+
+div#logoFrame div#logo {
+    color: orange;
+    font-size: 13pt;
+    font-weight: bold;
+    float: left;
+    text-decoration: none;
+}
+
+h5.clipperzPayoff {
+    color: white;
+    font-size: 13pt;
+    font-weight: normal;
+    padding-left: 20px;
+    white-space: nowrap;
+    margin: 0px;
+    padding-left: 4px;
+    float: left;
+}
+
+/* @end */
+
+
+/* @group Login box */
+
+div#loginBox {
+    border: solid 1px #ff9955;
+    padding: 10px;
+}
+
+div#loginBox div.body h3.loading {
+    margin: 0px;
+    text-align: center;
+    padding-top: 60px;
+    color: white;
+    font-size: 30pt;
+    padding-left: 20px;
+}
+
+/* @group Login form */
+
+div#loginBox h4 {
+    color: #1f2148;
+    font-size: 16pt;
+    font-weight: normal;
+    padding-left: 20px;
+    margin: 0px;
+}
+
+div#loginBox form.loginForm {
+    padding: 5px 20px 0px;  
+    margin-bottom: 0px;
+}
+
+div#loginBox form.loginForm label {
+    color: #1f2148;
+    font-size: 10pt;
+    display: block;
+    padding-top: 5px;
+}
+
+div#loginBox form.loginForm input {
+    width: 230px;
+    font-size: 12pt;
+    border: 1px solid #bb4924;
+    color: #333366;
+    background-color: white;
+    padding: 2px 5px;
+}
+
+div#loginBox form.loginForm label.checkbox {
+    display: inline;
+}
+
+div#loginBox form.loginForm .checkbox:hover {
+    cursor: pointer;
+}
+
+div#loginBox form.loginForm input.checkbox {
+    margin: 10px 8px 0px 0px;
+    height: auto;
+    width: auto;
+    border: 0px;
+}
+
+div#loginBox form.loginForm ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#loginBox form.loginForm ul li {
+    display: block;
+}
+
+div#loginBox form.loginForm input.submit {
+    margin-top: 5px;
+    width: 140px;
+    border: 1px solid white;
+    color: white;
+    background-color: #dd5500;
+    padding: 6px;
+    font-size: 12pt;
+    height: auto;
+}
+
+div#loginBox form.loginForm input.submit:hover {
+    background-color: #773311;
+    color: white;
+    cursor: pointer;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Footer */
+
+/* @group Footer */
+
+div.pageHeaderAndBody {
+    height: 100%;
+}
+
+body > div.pageHeaderAndBody {
+    height: auto; min-height: 100%;
+}
+
+/* @end */
+
+/* @group LoginProgress */
+
+div.LoginProgress {
+    position: absolute;
+    top: 50px;
+    width: 360px;
+    height: 200px;
+    background-color: #d7d7c0;
+}
+
+div.LoginProgress div.header {
+    height: 40px;
+}
+
+div.LoginProgress div.header h3 {
+    font-size: 12pt;
+    font-weight: normal;
+    margin: 0px;
+    color: #777777;
+    padding-top: 13px;
+    padding-left: 18px;
+}
+
+div.LoginProgress div.body {
+    height: 120px;
+    overflow: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    background-color: #f1f1e9;
+}
+
+div.LoginProgress div.body div.img {
+    margin: 10px;
+    width: 50px;
+    height: 50px;
+    float: left;
+}
+
+div.LoginProgress div.body div.img.ALERT {
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff9955), to(#ff6622), color-stop(1,#333333));
+    background: -moz-linear-gradient(0% 100% 90deg,#ff6622, #ff9955);
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+
+}
+
+div.LoginProgress div.body div.img.ALERT canvas {
+    width: 50px;
+    height: 50px;
+}
+
+div.LoginProgress div.body div.loadingBar {
+    position: relative;
+    top: 51px;
+    left: 60px;
+}
+
+div.LoginProgress div.body div.errorBox p {
+    color: #787872;
+    padding-top: 20px;
+    padding-left: 80px;
+}
+
+div.LoginProgress div.footer {
+    margin-left: 19px;
+    margin-right: 18px;
+}
+
+div.LoginProgress div.footer a {
+    text-decoration: none;
+    text-align: center;
+    color: #787872;
+    display: block;
+    font-weight: bold;
+    font-size: 11pt;
+    width: 100px;
+    margin-top: 11px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.LoginProgress div.footer div.button.default {
+    text-decoration: underline;
+}
+
+div.LoginProgress div.buttonArea {
+    text-align: center;
+}
+
+div.LoginProgress div.button {
+    display: inline-block;
+}
+
+div.LoginProgress div.footer a:hover {
+    color: #515247;
+}
+
+div.loadingBar {
+    height: 22px;
+    width: 214px;
+}
+
+div.loadingBar div.loadingBarProgressBox {
+    padding: 2px;
+}
+
+div.loadingBar div.loadingBarProgress {
+    height:18px;
+    width: 0%;
+    background-color: rgba(248,79,0,0.6);
+    -webkit-border-radius: 9px;
+    border-radius: 9px;
+}
+
+/* @end */
+
+/* @group Popup page body */
+
+#mainDiv .cardTree tree {
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+    font-family: tahoma,serif;
+    font-size: 12pt;
+}
+
+#mainDiv .cardTree tree .directLogin:hover:after,
+#mainDiv .cardTree tree .URL:hover:after,
+#mainDiv .cardTree tree .EMAIL:hover:after,
+#mainDiv .cardTree tree .PASSWORD:hover:after,
+#mainDiv .cardTree tree .NONE:hover:after {
+    content: url('/images/copy.png');
+    margin-left: 2px;
+    vertical-align: middle;
+}
+
+#mainDiv .cardTree tree .directLogin {
+    cursor: pointer;
+    color: #15428b;
+    text-decoration: underline;
+}
+
+#mainDiv .cardTree tree .directLogin:hover:after {
+    content: url('/images/link.png');
+}
+
+#mainDiv .cardTree tree .URL {
+    background-image: url("/images/web.png");
+    cursor: pointer;
+    color: #003DB8;
+    text-decoration: underline;
+}
+
+#mainDiv .cardTree tree .URL:hover:after {
+    content: url('/images/link.png');
+}
+
+#mainDiv .cardTree tree .EMAIL {
+    background-image: url("/images/email.png");
+}
+
+#mainDiv .cardTree tree .PASSWORD {
+    background-image: url("/images/lock.png");
+}
+
+#mainDiv .cardTree tree .NONE {
+    background-image: url("/images/txt.png");
+}
+
+/* @end */
