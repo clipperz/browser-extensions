@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://discothequebutton/skin/discothequeMain.css" type="text/css" ?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % discothequeDTD SYSTEM
+    "chrome://discothequebutton/locale/discothequebutton.dtd" >
+  %discothequeDTD;
+]>
+<overlay id="discotheque-toobar-button-overlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="application/x-javascript" src="chrome://discothequebutton/content/discothequeMain.js" />
+
+	<!-- Toolbar button -->
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbarbutton id="discotheque-toolbar-button" label="&discotheque.toolbar.button.label;"
+			tooltiptext="&discotheque.toolbar.button.tooltip;" oncommand="discothequeButton.loadBookmarklet()"
+			class="toolbarbutton-1 chromeclass-toolbar-additional discotheque-button" />
+	</toolbarpalette>
+</overlay>

@@ -1,0 +1,6 @@
+content clipperzbutton chrome/clipperzbutton/content/
+skin clipperzbutton classic/1.0 chrome/clipperzbutton/skin/global/
+style chrome://global/content/customizeToolbar.xul chrome://clipperzbutton/skin/clipperzMain.css
+
+locale clipperzbutton en-US chrome/clipperzbutton/locale/en-US/
+overlay chrome://browser/content/browser.xul chrome://clipperzbutton/content/clipperzMain.xul
