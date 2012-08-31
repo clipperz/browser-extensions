@@ -13,8 +13,9 @@
 		"default_title": "__MSG_extension_browser_action_title__",
 		"popup": "html/popup.html"
 	},
-	"background_page": "html/background.html",
+	"background": { "page": "html/background.html" },
 	"homepage_url": "https://www.clipperz.com",
 	"options_page": "html/options.html",
-	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*", "clipboardWrite"]
+	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*", "clipboardWrite"],
+	"manifest_version": 2
 }

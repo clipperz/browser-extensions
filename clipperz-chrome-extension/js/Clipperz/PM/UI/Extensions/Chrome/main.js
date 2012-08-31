@@ -55,3 +55,10 @@ function run() {
 }
 
 MochiKit.DOM.addLoadEvent(run);
+
+// moved from background.html
+Clipperz_IEisBroken = false;
+Clipperz_normalizedNewLine = '\n';
+Clipperz_dumpUrl = "/dump/";
+
+Clipperz.PM.Proxy.defaultProxy = new Clipperz.PM.Proxy.JSON({'url':'https://www.clipperz.com/gamma/json', 'shouldPayTolls':true});
