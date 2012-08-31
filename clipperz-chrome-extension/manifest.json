@@ -12,7 +12,6 @@
 	"browser_action": {
 		"default_icon": "images/icon.png",
 		"default_title": "__MSG_extension_browser_action_title__",
-		// "popup": "html/popup.html"
 		"default_popup": "html/popup.html"
 	},
 	"background": { "page": "html/background.html" },
