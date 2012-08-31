@@ -56,3 +56,8 @@ function run() {
 }
 
 MochiKit.DOM.addLoadEvent(run);
+
+// moved from popup.html
+Clipperz_IEisBroken = false;
+Clipperz_normalizedNewLine = '\n';
+Clipperz_dumpUrl = "/dump/";
