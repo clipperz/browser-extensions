@@ -1,6 +1,7 @@
 {
 	"name": "__MSG_extension_name__",
 	"version": "1.0",
+	"manifest_version": 2,
 	"description": "__MSG_extension_description__",
 	"icons": {
 		"16": "images/icon16.png",
@@ -11,11 +12,11 @@
 	"browser_action": {
 		"default_icon": "images/icon.png",
 		"default_title": "__MSG_extension_browser_action_title__",
-		"popup": "html/popup.html"
+		// "popup": "html/popup.html"
+		"default_popup": "html/popup.html"
 	},
 	"background": { "page": "html/background.html" },
 	"homepage_url": "https://www.clipperz.com",
 	"options_page": "html/options.html",
-	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*", "clipboardWrite"],
-	"manifest_version": 2
+	"permissions": ["chrome://favicon/", "https://www.clipperz.com/*", "clipboardWrite"]
 }
