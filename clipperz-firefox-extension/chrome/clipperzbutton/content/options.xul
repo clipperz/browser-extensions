@@ -1,0 +1,58 @@
+<?xml version="1.0"?>  
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://clipperzbutton/skin/clipperzMain.css" type="text/css" ?>
+   
+<!DOCTYPE overlay [
+  <!ENTITY % clipperzDTD SYSTEM
+    "chrome://clipperzbutton/locale/clipperzbutton.dtd" >
+  %clipperzDTD;
+]>
+
+<prefwindow id="clipperzbutton-prefs"  
+     title="Clipperz Options"  
+     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
+   
+	<script type="application/x-javascript" src="chrome://clipperzbutton/content/clipperzMain.js" />
+
+<prefpane id="clipperz-pane" label="Clipperz Settings">  
+  <preferences>  
+    <preference id="pref_shortcut_modifiers" name="clipperz.shortcut-modifiers" type="string"/>  
+    <preference id="pref_shortcut_letter" name="clipperz.shortcut-letter" type="string"/>
+	<preference id="pref_top" name="clipperz.position-top" type="string"/> 
+	<preference id="pref_left" name="clipperz.position-left" type="string"/>
+	<preference id="pref_width" name="clipperz.position-width" type="string"/>
+	<preference id="pref_height" name="clipperz.position-height" type="string"/>
+	<preference id="pref_opened" name="clipperz.window-opened" type="string"/>
+  </preferences>  
+  
+  <hbox align="left">
+	<image src="chrome://clipperzbutton/skin/logo.png"/>
+	<vbox>
+	<label value="Clipperz" class="header"/>
+	<label value="Clipperz S.r.l." class="srl"/>
+	</vbox>
+  </hbox>
+
+  <hbox align="center">  
+	<groupbox>
+  		<caption label="Open window shortcut"/>
+		<menulist id="mod" preference="pref_shortcut_modifiers">
+		  <menupopup>
+		    <menuitem id="ctrl" label="ctrl" value="control" onclick="modChanged(this.value);" />
+		    <menuitem id="alt" label="alt/option" value="alt" onclick="modChanged(this.value);" />
+			<menuitem id="shift" label="shift" value="shift" onclick="modChanged(this.value);" />
+			<menuitem id="cmd" label="cmd (only Mac)" value="accel" onclick="modChanged(this.value);" />
+		  </menupopup>
+		</menulist>
+	    <textbox id="key" preference="pref_shortcut_letter" maxlength="1" onchange="keyChanged();"/>
+	</groupbox>
+  </hbox>
+  <vbox pack="center">  
+	<groupbox>
+  		<caption label="Window size/location"/>
+		<button label="&clipperz.toolbar.reset.label;" oncommand="resetWindow();"/>
+    </groupbox>
+  </vbox>
+</prefpane>  
+   
+</prefwindow>

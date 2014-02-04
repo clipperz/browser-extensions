@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://clipperzbutton/skin/clipperzMain.css" type="text/css" ?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % clipperzDTD SYSTEM
+    "chrome://clipperzbutton/locale/clipperzbutton.dtd" >
+  %clipperzDTD;
+]>
+
+<overlay id="clipperz-toolbar-button-overlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="application/x-javascript" src="chrome://clipperzbutton/content/clipperzMain.js" />
+	
+	<toolbarpalette id="BrowserToolbarPalette">
+	  <toolbarbutton id="clipperz-toolbar-button" class="toolbarbutton-1 chromeclass-toolbar-additional custombutton"
+	    label="&clipperz.toolbar.button.label;" tooltiptext="&clipperz.toolbar.button.tooltip;"
+	    oncommand="clipperzButton.openPanel();"/>
+	</toolbarpalette>
+	
+	<keyset>
+	  <key id="open-clipperz" modifiers="control" key="B" oncommand="clipperzButton.openPanel();"/>
+	</keyset>
+	
+	<menupopup id="menu_ToolsPopup">
+	   <menuitem id="menu-clipperz" label="&clipperz.toolbar.menu.options;"
+	          oncommand="clipperzButton.openPreferences();"/>
+	</menupopup>
+</overlay>

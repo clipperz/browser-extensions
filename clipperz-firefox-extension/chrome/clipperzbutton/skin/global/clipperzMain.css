@@ -1,0 +1,9 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#clipperz-toolbar-button
+{list-style-image: url("chrome://clipperzbutton/skin/favicon.png");}
+
+.srl{
+	font-size:11px;
+	color: #acacac;
+}
